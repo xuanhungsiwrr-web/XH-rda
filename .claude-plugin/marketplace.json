@@ -6,12 +6,15 @@
   "plugins": [
     {
       "name": "XH-rda",
-      "source": "github:xuanhungsiwrr-web/XH-rda",
+      "source": "./",
       "description": "Bo cong cu viet cac loai bao cao"
     },
     {
       "name": "ai-governance",
-      "source": "github:xuanhungsiwrr-web/ai-space-governance",
+      "source": {
+        "source": "github",
+        "repo": "xuanhungsiwrr-web/ai-space-governance"
+      },
       "description": "Bo cong cu quan tri thu muc AI Space"
     }
   ]
