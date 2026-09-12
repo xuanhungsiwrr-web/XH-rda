@@ -1,0 +1,66 @@
+From 58fada8c139adb0b43079b6071ed0163cce5256a Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 12 Sep 2026 22:19:40 +0000
+Subject: [PATCH] Strip diacritics from packs/report-library filenames for
+ Windows zip compatibility
+
+---
+ .../Noi dung Bao cao Nghien cuu Kha thi va thuyet minh TKCS.md    | 0
+ .../Noi dung Chu truong Dau tu va Thiet ke So bo Du an.md         | 0
+ .../Noi dung Ho so Bao cao Kinh te - Ky thuat Dau tu Xay dung.md  | 0
+ .../report-library/Noi dung TM Thiet ke So bo Du an.md            | 0
+ .../Noi dung Thuyet minh Thiet ke Ban ve Thi cong.md              | 0
+ .../TCVN_Lap Bao cao De xuat Chu truong Dau tu Thuy loi.md        | 0
+ .../TCVN_Lap Thuyet minh Bao cao Kinh te - Ky thuat Xay dung.md   | 0
+ .../TCVN_Lap Thuyet minh Thiet ke Ban ve Thi cong Thuy loi.md     | 0
+ ... dung thuyet minh Bao cao nghien cuu kha thi du an thuy loi.md | 0
+ 9 files changed, 0 insertions(+), 0 deletions(-)
+ rename "packs/report-library/N\341\273\231i dung B\303\241o c\303\241o Nghi\303\252n c\341\273\251u Kh\341\272\243 thi v\303\240 thuy\341\272\277t minh TKCS.md" => packs/report-library/Noi dung Bao cao Nghien cuu Kha thi va thuyet minh TKCS.md (100%)
+ rename "packs/report-library/N\341\273\231i dung Ch\341\273\247 tr\306\260\306\241ng \304\220\341\272\247u t\306\260 v\303\240 Thi\341\272\277t k\341\272\277 S\306\241 b\341\273\231 D\341\273\261 \303\241n.md" => packs/report-library/Noi dung Chu truong Dau tu va Thiet ke So bo Du an.md (100%)
+ rename "packs/report-library/N\341\273\231i dung H\341\273\223 s\306\241 B\303\241o c\303\241o Kinh t\341\272\277 - K\341\273\271 thu\341\272\255t \304\220\341\272\247u t\306\260 X\303\242y d\341\273\261ng.md" => packs/report-library/Noi dung Ho so Bao cao Kinh te - Ky thuat Dau tu Xay dung.md (100%)
+ rename "packs/report-library/N\341\273\231i dung TM Thi\341\272\277t k\341\272\277 S\306\241 b\341\273\231 D\341\273\261 \303\241n.md" => packs/report-library/Noi dung TM Thiet ke So bo Du an.md (100%)
+ rename "packs/report-library/N\341\273\231i dung Thuy\341\272\277t minh Thi\341\272\277t k\341\272\277 B\341\272\243n v\341\272\275 Thi c\303\264ng.md" => packs/report-library/Noi dung Thuyet minh Thiet ke Ban ve Thi cong.md (100%)
+ rename "packs/report-library/TCVN_L\341\272\255p B\303\241o c\303\241o \304\220\341\273\201 xu\341\272\245t Ch\341\273\247 tr\306\260\306\241ng \304\220\341\272\247u t\306\260 Th\341\273\247y l\341\273\243i.md" => packs/report-library/TCVN_Lap Bao cao De xuat Chu truong Dau tu Thuy loi.md (100%)
+ rename "packs/report-library/TCVN_L\341\272\255p Thuy\341\272\277t minh B\303\241o c\303\241o Kinh t\341\272\277 - K\341\273\271 thu\341\272\255t X\303\242y d\341\273\261ng.md" => packs/report-library/TCVN_Lap Thuyet minh Bao cao Kinh te - Ky thuat Xay dung.md (100%)
+ rename "packs/report-library/TCVN_L\341\272\255p Thuy\341\272\277t minh Thi\341\272\277t k\341\272\277 B\341\272\243n v\341\272\275 Thi c\303\264ng Th\341\273\247y l\341\273\243i.md" => packs/report-library/TCVN_Lap Thuyet minh Thiet ke Ban ve Thi cong Thuy loi.md (100%)
+ rename "packs/report-library/TCVN_N\341\273\231i dung thuy\341\272\277t minh B\303\241o c\303\241o nghi\303\252n c\341\273\251u kh\341\272\243 thi d\341\273\261 \303\241n th\341\273\247y l\341\273\243i.md" => packs/report-library/TCVN_Noi dung thuyet minh Bao cao nghien cuu kha thi du an thuy loi.md (100%)
+
+diff --git "a/packs/report-library/N\341\273\231i dung B\303\241o c\303\241o Nghi\303\252n c\341\273\251u Kh\341\272\243 thi v\303\240 thuy\341\272\277t minh TKCS.md" b/packs/report-library/Noi dung Bao cao Nghien cuu Kha thi va thuyet minh TKCS.md
+similarity index 100%
+rename from "packs/report-library/N\341\273\231i dung B\303\241o c\303\241o Nghi\303\252n c\341\273\251u Kh\341\272\243 thi v\303\240 thuy\341\272\277t minh TKCS.md"
+rename to packs/report-library/Noi dung Bao cao Nghien cuu Kha thi va thuyet minh TKCS.md
+diff --git "a/packs/report-library/N\341\273\231i dung Ch\341\273\247 tr\306\260\306\241ng \304\220\341\272\247u t\306\260 v\303\240 Thi\341\272\277t k\341\272\277 S\306\241 b\341\273\231 D\341\273\261 \303\241n.md" b/packs/report-library/Noi dung Chu truong Dau tu va Thiet ke So bo Du an.md
+similarity index 100%
+rename from "packs/report-library/N\341\273\231i dung Ch\341\273\247 tr\306\260\306\241ng \304\220\341\272\247u t\306\260 v\303\240 Thi\341\272\277t k\341\272\277 S\306\241 b\341\273\231 D\341\273\261 \303\241n.md"
+rename to packs/report-library/Noi dung Chu truong Dau tu va Thiet ke So bo Du an.md
+diff --git "a/packs/report-library/N\341\273\231i dung H\341\273\223 s\306\241 B\303\241o c\303\241o Kinh t\341\272\277 - K\341\273\271 thu\341\272\255t \304\220\341\272\247u t\306\260 X\303\242y d\341\273\261ng.md" b/packs/report-library/Noi dung Ho so Bao cao Kinh te - Ky thuat Dau tu Xay dung.md
+similarity index 100%
+rename from "packs/report-library/N\341\273\231i dung H\341\273\223 s\306\241 B\303\241o c\303\241o Kinh t\341\272\277 - K\341\273\271 thu\341\272\255t \304\220\341\272\247u t\306\260 X\303\242y d\341\273\261ng.md"
+rename to packs/report-library/Noi dung Ho so Bao cao Kinh te - Ky thuat Dau tu Xay dung.md
+diff --git "a/packs/report-library/N\341\273\231i dung TM Thi\341\272\277t k\341\272\277 S\306\241 b\341\273\231 D\341\273\261 \303\241n.md" b/packs/report-library/Noi dung TM Thiet ke So bo Du an.md
+similarity index 100%
+rename from "packs/report-library/N\341\273\231i dung TM Thi\341\272\277t k\341\272\277 S\306\241 b\341\273\231 D\341\273\261 \303\241n.md"
+rename to packs/report-library/Noi dung TM Thiet ke So bo Du an.md
+diff --git "a/packs/report-library/N\341\273\231i dung Thuy\341\272\277t minh Thi\341\272\277t k\341\272\277 B\341\272\243n v\341\272\275 Thi c\303\264ng.md" b/packs/report-library/Noi dung Thuyet minh Thiet ke Ban ve Thi cong.md
+similarity index 100%
+rename from "packs/report-library/N\341\273\231i dung Thuy\341\272\277t minh Thi\341\272\277t k\341\272\277 B\341\272\243n v\341\272\275 Thi c\303\264ng.md"
+rename to packs/report-library/Noi dung Thuyet minh Thiet ke Ban ve Thi cong.md
+diff --git "a/packs/report-library/TCVN_L\341\272\255p B\303\241o c\303\241o \304\220\341\273\201 xu\341\272\245t Ch\341\273\247 tr\306\260\306\241ng \304\220\341\272\247u t\306\260 Th\341\273\247y l\341\273\243i.md" b/packs/report-library/TCVN_Lap Bao cao De xuat Chu truong Dau tu Thuy loi.md
+similarity index 100%
+rename from "packs/report-library/TCVN_L\341\272\255p B\303\241o c\303\241o \304\220\341\273\201 xu\341\272\245t Ch\341\273\247 tr\306\260\306\241ng \304\220\341\272\247u t\306\260 Th\341\273\247y l\341\273\243i.md"
+rename to packs/report-library/TCVN_Lap Bao cao De xuat Chu truong Dau tu Thuy loi.md
+diff --git "a/packs/report-library/TCVN_L\341\272\255p Thuy\341\272\277t minh B\303\241o c\303\241o Kinh t\341\272\277 - K\341\273\271 thu\341\272\255t X\303\242y d\341\273\261ng.md" b/packs/report-library/TCVN_Lap Thuyet minh Bao cao Kinh te - Ky thuat Xay dung.md
+similarity index 100%
+rename from "packs/report-library/TCVN_L\341\272\255p Thuy\341\272\277t minh B\303\241o c\303\241o Kinh t\341\272\277 - K\341\273\271 thu\341\272\255t X\303\242y d\341\273\261ng.md"
+rename to packs/report-library/TCVN_Lap Thuyet minh Bao cao Kinh te - Ky thuat Xay dung.md
+diff --git "a/packs/report-library/TCVN_L\341\272\255p Thuy\341\272\277t minh Thi\341\272\277t k\341\272\277 B\341\272\243n v\341\272\275 Thi c\303\264ng Th\341\273\247y l\341\273\243i.md" b/packs/report-library/TCVN_Lap Thuyet minh Thiet ke Ban ve Thi cong Thuy loi.md
+similarity index 100%
+rename from "packs/report-library/TCVN_L\341\272\255p Thuy\341\272\277t minh Thi\341\272\277t k\341\272\277 B\341\272\243n v\341\272\275 Thi c\303\264ng Th\341\273\247y l\341\273\243i.md"
+rename to packs/report-library/TCVN_Lap Thuyet minh Thiet ke Ban ve Thi cong Thuy loi.md
+diff --git "a/packs/report-library/TCVN_N\341\273\231i dung thuy\341\272\277t minh B\303\241o c\303\241o nghi\303\252n c\341\273\251u kh\341\272\243 thi d\341\273\261 \303\241n th\341\273\247y l\341\273\243i.md" b/packs/report-library/TCVN_Noi dung thuyet minh Bao cao nghien cuu kha thi du an thuy loi.md
+similarity index 100%
+rename from "packs/report-library/TCVN_N\341\273\231i dung thuy\341\272\277t minh B\303\241o c\303\241o nghi\303\252n c\341\273\251u kh\341\272\243 thi d\341\273\261 \303\241n th\341\273\247y l\341\273\243i.md"
+rename to packs/report-library/TCVN_Noi dung thuyet minh Bao cao nghien cuu kha thi du an thuy loi.md
+-- 
+2.43.0
+
