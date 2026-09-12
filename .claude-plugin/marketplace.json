@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "XH-rda",
-      "source": "./",
+      "source": "github:xuanhungsiwrr-web/XH-rda",
       "description": "Bo cong cu viet cac loai bao cao"
     },
     {
