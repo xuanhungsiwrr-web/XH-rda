@@ -5,7 +5,7 @@
   },
   "plugins": [
     {
-      "name": "XH-rda",
+      "name": "xh-tuvan",
       "source": "./",
       "description": "Bo cong cu viet cac loai bao cao"
     },
