@@ -1,3 +1,4 @@
+<!-- HISTORICAL ONLY: Do not activate this legacy skill or its provider policy. Use root skills and references/domain-workflow.md. -->
 ---
 name: xh-tuvan
 description: |

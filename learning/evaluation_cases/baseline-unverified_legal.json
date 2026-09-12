@@ -1,0 +1,13 @@
+{
+  "input": {
+    "legal": [
+      {
+        "original_url": "https://example.invalid/fixture"
+      }
+    ]
+  },
+  "expected_findings": [
+    "unverified_legal"
+  ],
+  "explanation": "Synthetic regression for unverified_legal; fixture only, not project facts or approved knowledge."
+}

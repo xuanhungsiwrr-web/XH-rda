@@ -1,3 +1,4 @@
+<!-- HISTORICAL ONLY: Do not activate this legacy skill or its provider policy. Use root skills and references/domain-workflow.md. -->
 ---
 name: "xh-proj-org"
 description: "Sap xep, to chuc va don dep thu muc ho so du an tu van thiet ke (thuy loi, de dieu, ke bo song, giao thong, ha tang) theo he thong chuan 10./20./30./40./50./60. Kich hoat ngay khi nguoi dung de cap den bat ky noi dung nao sau: \"sap xep du an\", \"to chuc thu muc\", \"don dep ho so\", \"cay thu muc du an\", \"tao folder du an moi\", \"doi ten file ho so\", \"XH_ProjOrg\", \"organize project\", \"cau truc thu muc\", \"folder du an\", \"dat ten file\", \"ho so thiet ke\", \"dọn dẹp archive\", \"HSPheDuyet\". Cung kich hoat khi nhac den du an BCNCKT / TKKT / TKBVTC ket hop voi tu \"thu muc\", \"ho so\", \"sap xep\". Day la skill chinh cho toan bo cong tac quan ly ho so du an cua to chuc."

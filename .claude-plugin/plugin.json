@@ -1,31 +1,17 @@
 {
   "name": "xh-tuvan",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "license": "MIT",
-  "description": "Portable report orchestration: host conductor, capability fallback, project revisions, requirement coverage, incremental Markdown and consistent Word rendering.",
+  "description": "Construction domain orchestration through capability contracts, revisioned reports and shared approved learning.",
   "author": {
     "name": "Ngô Xuân Hưng"
   },
   "keywords": [
-    "thuỷ lợi",
-    "đê điều",
-    "kè bờ sông",
-    "cầu",
-    "BCKTKT",
-    "BCNCKT",
-    "BCĐXCTĐT",
-    "TKBVTC",
-    "hồ sơ tư vấn",
-    "tổ chức thư mục",
-    "Google Drive",
-    "_facts.yaml",
-    "NotebookLM",
-    "Exa",
-    "trinh sát",
-    "Gemini_QC",
-    "vai người viết",
-    "viết từng chương",
-    "đặc tả đề mục",
-    "phạm vi đầu tư"
+    "construction-consulting",
+    "NCKT",
+    "DXCTDT",
+    "KTKT",
+    "domain-orchestrator",
+    "shared-learning"
   ]
 }

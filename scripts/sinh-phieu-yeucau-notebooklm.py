@@ -3,17 +3,9 @@
 """
 sinh-phieu-yeucau-notebooklm.py — sinh "Phiếu yêu cầu trích xuất" cho NotebookLM.
 
-Thay cho việc gọi thẳng Gemini API (scripts/evidence-gemini.py, nay là đường dự
-phòng) khi hồ sơ khảo sát quá nặng để Claude đọc thẳng. NotebookLM không có API
-công khai — không tự động hoá được từ trong Claude. Đường đi mới:
-
-    1. Script này quét _facts.yaml + danh mục chỉ tiêu (qc-rules.yaml), liệt kê
-       những khoá còn thiếu / unverified / conflict, sinh ra MỘT file .md.
-    2. Người dùng tự đưa file .md đó cho NotebookLM (thao tác tay, ngoài Claude),
-       hỏi từng dòng theo gợi ý, rồi dán câu trả lời vào đúng bảng mẫu ở cuối file
-       (hoặc lưu thành file riêng theo cùng khuôn bảng).
-    3. Đưa file đã điền cho Claude, dùng doc-ket-qua-notebooklm.py để bóc ngược
-       vào _facts.yaml.
+Công cụ tương thích bảng extraction cũ, chạy cục bộ và không gọi API.
+EXTRACTOR do Global Control resolve; tên file giữ để tương thích các hồ sơ cũ.
+Đầu ra nhập qua doc-ket-qua-notebooklm.py vẫn là candidate cần xác minh.
 
 KHÔNG tự bịa câu hỏi hay giá trị — script chỉ liệt kê CẦN GÌ, không đoán TRẢ LỜI.
 
@@ -115,7 +107,7 @@ def sinh_markdown(danh_sach: list[dict], ten_du_an: str) -> str:
         "Đưa file này (hoặc nội dung mục 1 dưới đây) cho NotebookLM cùng với "
         "hồ sơ khảo sát đã tải lên notebook. Hỏi lần lượt từng dòng — mỗi dòng "
         "một câu hỏi gợi ý. Dán câu trả lời của NotebookLM vào đúng bảng mẫu "
-        "ở mục 2, rồi đưa file đã điền lại cho Claude — dùng "
+        "ở mục 2, rồi đưa file đã điền lại cho MASTER — dùng "
         "`doc-ket-qua-notebooklm.py` để bóc vào `_facts.yaml`."
     )
     dong.append("")

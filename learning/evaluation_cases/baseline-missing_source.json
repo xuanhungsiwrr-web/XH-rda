@@ -1,0 +1,14 @@
+{
+  "input": {
+    "facts": [
+      {
+        "value": 2,
+        "unit": "m"
+      }
+    ]
+  },
+  "expected_findings": [
+    "missing_source"
+  ],
+  "explanation": "Synthetic regression for missing_source; fixture only, not project facts or approved knowledge."
+}

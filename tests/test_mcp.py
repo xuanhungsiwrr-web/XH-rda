@@ -19,7 +19,9 @@ class MCPTests(unittest.TestCase):
                     await session.initialize()
                     tools=await session.list_tools()
                     names={t.name for t in tools.tools}
-                    self.assertTrue({'xh_project','scrape_and_save_to_project','search_vietnam_regulations'}<=names)
+                    self.assertEqual({'xh_project','xh_learning'},names)
+                    denied=await session.call_tool('xh_learning',{'action':'approve','payload':{}})
+                    self.assertIn('Operator approval required',denied.content[0].text)
                     result=await session.call_tool('xh_project',{'action':'init','project_code':'demo',
                         'payload':{'metadata':{'project_name':'MCP fixture'}}})
                     self.assertFalse(result.isError)

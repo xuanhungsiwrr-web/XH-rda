@@ -1,0 +1,32 @@
+{
+  "at": "2026-09-08T18:46:23.355802+00:00",
+  "cases": [
+    {
+      "case": "baseline-conflicting_fact.json",
+      "passed": true,
+      "sha256": "de38a4e27a64745e559c6917a38e9b1b8e3d6074046f206b24ae6c46631f00f8"
+    },
+    {
+      "case": "baseline-missing_source.json",
+      "passed": true,
+      "sha256": "4402737c8c5288592c802d5e5f49dc719b7953edc375610a2a0ccdaee84e467b"
+    },
+    {
+      "case": "baseline-unlabelled_assumption.json",
+      "passed": true,
+      "sha256": "e099ad104361d475704bc7f33dd2c686475c24a050202704815f6986a8174e6b"
+    },
+    {
+      "case": "baseline-unverified_legal.json",
+      "passed": true,
+      "sha256": "95eb9382d6f12d405550a71d7da26834bffee93731485a3e95efcf3ad906fd93"
+    },
+    {
+      "case": "baseline-valid_evidence.json",
+      "passed": true,
+      "sha256": "5b643f74992a32f799b65705548a226e9c0457a5e8b4dc39b7687cd5a1b5bf18"
+    }
+  ],
+  "passed": true,
+  "scope": "Deterministic evidence guards; semantic skill quality requires reviewer evaluation."
+}

@@ -8,7 +8,8 @@
       "env": {
         "XH_PROJECTS_ROOT": "D:\\AI_Space\\AI_Workspace\\Projects",
         "XH_REPORT_LIBRARY": "D:\\AI_Space\\AI_Workspace\\NoiDung_CacBaoCao",
-        "PYTHONUTF8": "1"
+        "PYTHONUTF8": "1",
+        "XH_TUVAN_KNOWLEDGE_ROOT": "D:/AI_Space/AI_Workspace/SharedKnowledge/xh-tuvan"
       }
     }
   }

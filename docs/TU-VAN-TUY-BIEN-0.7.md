@@ -1,3 +1,5 @@
+> Lịch sử bản 0.7. Không áp dụng model routing/budget trong tài liệu này cho runtime 0.8. Xem ARCHITECTURE-0.8.md.
+
 # Cách dùng hệ thống báo cáo tùy biến
 
 ## 1. Nhạc trưởng theo nơi làm việc

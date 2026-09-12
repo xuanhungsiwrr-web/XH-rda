@@ -1,0 +1,100 @@
+# Bản đặc tả đề mục GỐC cho Báo cáo đề xuất chủ trương đầu tư (BCĐXCTĐT)
+#
+# Đây là bộ HẠT GIỐNG dùng chung cho mọi dự án, không phải spec của một dự án cụ thể.
+# xh-outline chép bộ này sang `specs/BCDXCTDT.yaml` trong thư mục dự án rồi bổ sung
+# `nguon_du_lieu`, `khoa_facts_bat_buoc` theo hồ sơ thực tế của dự án đó.
+#
+# Luật: KHÔNG đưa số liệu cụ thể của bất kỳ dự án nào vào file này, chỉ đưa LOẠI số liệu.
+
+schema_version: "1.0"
+loai_bao_cao: "BCĐXCTĐT"
+can_cu_khung: "Luật Đầu tư công — nội dung chủ yếu của Báo cáo đề xuất chủ trương đầu tư"
+
+de_muc:
+
+  - ma: "C3.4"
+    ten: "Phạm vi đầu tư"
+    nhom_van_phong: "Giải pháp kỹ thuật"   # khô, đặc số liệu, đoạn ngắn — xem Mục H
+    muc_tieu: >
+      Vẽ đúng đường biên của dự án: cái gì thuộc dự án, cái gì không, ai quản lý phần
+      mặt nước/hành lang, và biên đó kéo dài trong bao lâu. Mục này tồn tại để người
+      thẩm định trả lời được câu "có chồng lấn với dự án nào không" mà không phải đọc
+      chương khác.
+
+    cau_hoi_tham_dinh:
+      - "Điểm đầu, điểm cuối ở đâu, có toạ độ không, dựa vào văn bản công bố ranh nào?"
+      - "Biên phía đất liền dừng ở đâu — theo hành lang bảo vệ nào, văn bản nào?"
+      - "Biên phía sông dừng ở đâu, có xâm phạm hành lang luồng không, ai quản lý vùng nước đó?"
+      - "Đoạn nào trong tuyến KHÔNG đầu tư, vì sao? Trừ đi rồi thì chiều dài xây dựng còn bao nhiêu?"
+      - "Hạng mục nào của khu vực thuộc dự án khác? Nêu tên dự án/quy hoạch đó."
+      - "Có thu hồi đất, tái định cư không? Nếu không thì căn cứ nào?"
+      - "Phạm vi thời gian bao nhiêu năm, khớp với tiến độ và kế hoạch vốn không?"
+
+    cau_truc_bat_buoc:
+      - id: "mo_dau"
+        ten: "Câu định vị"
+        yeu_cau: "Một đoạn 2–3 câu: vị trí, chiều dài tuyến, địa danh cấp phường + tỉnh/thành. Câu cuối liệt kê tên các nhóm a)–đ) sẽ trình bày."
+      - id: "a"
+        ten: "Nguyên tắc xác định phạm vi"
+        yeu_cau: "4–5 gạch đầu dòng. Mỗi nguyên tắc là một TIÊU CHÍ CẮT BIÊN, không phải mục tiêu đầu tư (mục tiêu đã có ở đề mục Mục tiêu đầu tư — không chép lại)."
+      - id: "b"
+        ten: "Phạm vi về không gian"
+        yeu_cau: "Điểm đầu/điểm cuối · toạ độ tim tuyến + văn bản công bố ranh · biên phía đất liền + văn bản hành lang bảo vệ · biên phía sông + cơ quan quản lý chuyên ngành · phân đoạn hiện trạng kèm dẫn chiếu đề mục hiện trạng."
+      - id: "c"
+        ten: "Phạm vi nội dung đầu tư"
+        yeu_cau: "Nhóm theo: công trình chính · hạ tầng kỹ thuật trên tuyến · hạng mục phụ trợ và đấu nối · xử lý hiện trạng · quan trắc · dự phòng đấu nối cho dự án khác. Viết theo hướng RANH GIỚI CÔNG VIỆC, không lặp lại danh mục của đề mục Quy mô đầu tư."
+      - id: "d"
+        ten: "Các hạng mục không thuộc phạm vi dự án"
+        yeu_cau: "Bắt buộc có. Mỗi loại trừ phải nêu LÝ DO và ĐỊA CHỈ TRÁCH NHIỆM (thuộc dự án nào, quy hoạch nào, đơn vị nào quản lý). Kết bằng một câu mở cho bước sau rà lại ranh cụ thể."
+      - id: "d2"
+        ten: "Phạm vi thời gian"
+        yeu_cau: "Một đoạn ngắn: khoảng năm thực hiện + dẫn chiếu đề mục tiến độ."
+      - id: "ket"
+        ten: "Câu chốt"
+        yeu_cau: "Một đoạn: phạm vi rõ về không gian – nội dung – ranh quản lý – thời gian, không trùng lặp với dự án liền kề."
+
+    nguon_du_lieu:
+      - "đề mục hiện trạng công trình (lấy phân đoạn, chiều dài, đoạn đã có kè)"
+      - "đề mục phù hợp quy hoạch (lấy văn bản công bố ranh, hành lang bảo vệ, quy hoạch liền kề)"
+      - "_facts.yaml: chieu_dai_tuyen, toa_do_diem_dau, toa_do_diem_cuoi, be_rong_hanh_lang_bao_ve"
+    khoa_facts_bat_buoc: ["chieu_dai_tuyen", "chieu_dai_xay_dung_moi"]
+
+    do_dai: "1,5–2,5 trang; 6 khối a)–đ) + mở + chốt"
+
+    hinh_bat_buoc: []
+    bang_bat_buoc: []
+    tuy_chon: ["sơ đồ ranh phạm vi đầu tư trên nền ảnh vệ tinh"]
+
+    cam_ky:
+      - >
+        KHÔNG lặp lại trị số đã nêu ở đề mục Quy mô/Thông số thiết kế (cao trình đỉnh,
+        tần suất thiết kế, cấp công trình). Dẫn chiếu đề mục, không chép số. Số lặp ở
+        hai chỗ là nguồn sai lệch số một khi thông số được tính lại.
+      - >
+        Một vị trí trên sông chỉ thuộc MỘT hệ quản lý luồng. Đã xác định thuộc vùng nước
+        cảng biển / khu vực hàng hải thì viện dẫn hành lang an toàn luồng hàng hải và
+        Cảng vụ Hàng hải; KHÔNG viện dẫn kèm hành lang luồng đường thuỷ nội địa cho cùng
+        vị trí đó. Viện dẫn cả hai là lỗi bị thẩm định bắt ngay.
+      - >
+        Sau bước chủ trương đầu tư, bước kế tiếp gọi đúng tên là "lập Báo cáo nghiên cứu
+        khả thi" (hoặc "lập Báo cáo kinh tế – kỹ thuật" với dự án được phép). KHÔNG viết
+        "bước lập dự án đầu tư".
+      - >
+        Có loại trừ đoạn nào khỏi tuyến thì phải chốt lại CHIỀU DÀI XÂY DỰNG MỚI sau khi
+        trừ, ngay trong mục này. Nêu 2.600m rồi nêu "không làm 380m" mà không cộng trừ
+        lại là để hở cho câu hỏi thẩm định.
+      - >
+        Không mô tả hiện trạng ở mục này. Hiện trạng thuộc chương Sự cần thiết đầu tư —
+        ở đây chỉ dẫn chiếu số đề mục.
+      - >
+        Không dùng "bao gồm:" + bullet để mở khối. Mở bằng chủ thể (in đậm tên nhóm),
+        rồi câu văn.
+
+    loi_da_xay_ra_that: >
+      Bản R7 Kè Thủ Thiêm: mục Phạm vi đầu tư viện dẫn "hành lang an toàn luồng chạy tàu
+      đường thuỷ nội địa cấp II" cho đoạn đã xác định nằm hạ lưu ranh HCM8–HCM9, tức đã
+      thuộc vùng nước cảng biển; đồng thời gọi bước kế tiếp là "bước lập dự án đầu tư".
+
+    exemplar: "references/exemplars/BCDXCTDT/C3-4_PhamViDauTu.md"
+    trang_thai: "cho_ra"
+    nguoi_duyet: ""

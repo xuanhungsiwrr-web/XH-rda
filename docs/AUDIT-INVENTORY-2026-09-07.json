@@ -1,0 +1,209 @@
+{
+  "date": "2026-09-07",
+  "scope": "Static inventory; no provider calls or end-to-end runtime test",
+  "skills": 10,
+  "python_files": 15,
+  "syntax_errors": [],
+  "files": [
+    {
+      "path": ".claude-plugin/plugin.json",
+      "bytes": 1206,
+      "sha256": "0fd5585b43a4284555bc9ae226381558049150f3a3e365ab5691e6c40a791d68"
+    },
+    {
+      "path": "agents/xh-qc.md",
+      "bytes": 5963,
+      "sha256": "a5b2ed44b5c28de9da20369a8e5f7c853f3071af1a9e8b2e128b9087b1cbac1e"
+    },
+    {
+      "path": "README.md",
+      "bytes": 25112,
+      "sha256": "4eb0a6cd6137082d0f89316dca83f9a8a795d3832a1c12134f2ea8de6524a729"
+    },
+    {
+      "path": "references/don-gia-dat-loi-ich-kinh-te.md",
+      "bytes": 3246,
+      "sha256": "c1e421b0745aac60b53ae861297514373de64396daa26bcb8cc0e52472f01fbc"
+    },
+    {
+      "path": "references/exemplars/BCDXCTDT/C3-4_PhamViDauTu.md",
+      "bytes": 8845,
+      "sha256": "c47b5896105bc2172b122b34612ae4c2bcfe52ef480c40c3f32afa7420bdedd4"
+    },
+    {
+      "path": "references/ho-so-van-phong.md",
+      "bytes": 22721,
+      "sha256": "75b7cdff396209cb4513c995df6316ddac9ca9731f88cbfe0a05bb2cbef313ba"
+    },
+    {
+      "path": "references/huong-dan-sua.md",
+      "bytes": 3929,
+      "sha256": "d7af998f6ca83c2c00dfd076d597955a2a7d089597c1cdde3b264626896ecf09"
+    },
+    {
+      "path": "references/kien-truc-3-lop.md",
+      "bytes": 4290,
+      "sha256": "e930046974986f4cab85bdbb7efb69b9396a75a1f423d4846cde01d30d061bec"
+    },
+    {
+      "path": "references/nguyen-tac.md",
+      "bytes": 4225,
+      "sha256": "44de5481a76e473a5df1d6195fc906fbc23718d29f7921293ddec0764cc56218"
+    },
+    {
+      "path": "references/phap-ly-2026-07-01.md",
+      "bytes": 9659,
+      "sha256": "f380de87e8c1076fb637b7702a1627077451845254bff662ca243054e03a03c6"
+    },
+    {
+      "path": "references/quy-uoc-dat-ten.md",
+      "bytes": 6752,
+      "sha256": "9ccfee2f2d2e31eb53aac6665a8d9ae746ba9c9caca611aedf7f5b0fc84b67ca"
+    },
+    {
+      "path": "references/spec-goc-BCDXCTDT.yaml",
+      "bytes": 6922,
+      "sha256": "2444ab2d4d28d4fa9958563cb2e9649415f9d984c33bca6780d5dff1cf27328a"
+    },
+    {
+      "path": "references/template-map.yaml",
+      "bytes": 2533,
+      "sha256": "6e8444eadad2c2ce1702e92310dbdd642b04760890f29cf8ca6f48502eee02f5"
+    },
+    {
+      "path": "scripts/detect-figures.py",
+      "bytes": 11705,
+      "sha256": "a0740e2279d46df5b18e3153394ef950627f2b737edb9b71d190602b6786fa4a"
+    },
+    {
+      "path": "scripts/do-muc-h.py",
+      "bytes": 2765,
+      "sha256": "68d62d9cb14de68f8f304beb67f31dbfa365d1a5dd949687c78cc0940c840215"
+    },
+    {
+      "path": "scripts/doc-ket-qua-notebooklm.py",
+      "bytes": 5511,
+      "sha256": "4f99239145402892fc15b5a88bf9aad38a6c1cb02b399e1ab9ac69e5d0256f01"
+    },
+    {
+      "path": "scripts/evidence-gemini.py",
+      "bytes": 8061,
+      "sha256": "cd3bc0bac3638a0ba52cd75a100130141c2a0c9b072eb81122ac7304574a293e"
+    },
+    {
+      "path": "scripts/extract-video-frames.py",
+      "bytes": 6751,
+      "sha256": "4948a5df191297999a5c338a3827593571763d4c014fac2477f4631f3aa74fef"
+    },
+    {
+      "path": "scripts/geo-index-photos.py",
+      "bytes": 10089,
+      "sha256": "2440147f5c43aa9597ab08747cd11b330edcb2f0c6cae5e82988df3e3ccd05ba"
+    },
+    {
+      "path": "scripts/ghi-ket-qua-trinh-sat.py",
+      "bytes": 4231,
+      "sha256": "14e887203d6ed131e4ec918c6ad9bf45efdd2862cfea35c73001caef558c4ae6"
+    },
+    {
+      "path": "scripts/learn-from-edits.py",
+      "bytes": 13496,
+      "sha256": "f98c2d0ab561df21eb5dc58ba5cac674e21c59d0428b273d968bac847999ace3"
+    },
+    {
+      "path": "scripts/mine-style.py",
+      "bytes": 15941,
+      "sha256": "42341a0b72d06047368bc23cd83d149998c4a2dbef34bd0a6fd7f705bc5eb04f"
+    },
+    {
+      "path": "scripts/pdf-trich-hinh.py",
+      "bytes": 6936,
+      "sha256": "bedc5bf1e21221e9674e678c4d51be2516ad058ba51c85400fd855184d5f9d5f"
+    },
+    {
+      "path": "scripts/phan-loai-ho-so.py",
+      "bytes": 9811,
+      "sha256": "9995f2d1d9b33258942b177848514e455e84d6f34bd8ad9df4b0806f425e4913"
+    },
+    {
+      "path": "scripts/qc-check.py",
+      "bytes": 43550,
+      "sha256": "83d3ea490863a47cab33b49b474e1b673f2a0b75d2c7aaa2464a4252f3b44978"
+    },
+    {
+      "path": "scripts/qc-rules.yaml",
+      "bytes": 7262,
+      "sha256": "33116371c6884eca227d33d8139c484a847d4f788c1ca5b6ccf3893507e19e44"
+    },
+    {
+      "path": "scripts/render_report.py",
+      "bytes": 19845,
+      "sha256": "076575d74f80ce1e67b06c789ec1f566128db86c7aece5828e896e2b9bc2fe4b"
+    },
+    {
+      "path": "scripts/sinh-phieu-yeucau-notebooklm.py",
+      "bytes": 8109,
+      "sha256": "7bfab799e5bd8c6febb1cf35d8737626278df4c6a81105cee248c4bb81a97275"
+    },
+    {
+      "path": "skills/xh-docx/SKILL.md",
+      "bytes": 4370,
+      "sha256": "e7fc95b39c7ddd810be3137e9ee54568b7674adbdf804eb227d0da894b89eb7a"
+    },
+    {
+      "path": "skills/xh-drive/SKILL.md",
+      "bytes": 7404,
+      "sha256": "779fa41d88cef4e76d2a3f2492c2a8a69ff7c32f8034d1276c40292566edb02b"
+    },
+    {
+      "path": "skills/xh-evidence/SKILL.md",
+      "bytes": 9073,
+      "sha256": "5ac122ebfa2aef11486aee19a413ac96ee58bb19a6eb8d5c409a10374ff374fa"
+    },
+    {
+      "path": "skills/xh-outline/SKILL.md",
+      "bytes": 5893,
+      "sha256": "292bb5a75d76d860843e57b813abea5a204f41df08161a725171a04e35c6e3b3"
+    },
+    {
+      "path": "skills/xh-proj-org/references/cay-thu-muc.md",
+      "bytes": 6872,
+      "sha256": "4ca1645d4829d44dde3053624fe2bc4a8b4ee0979abe9b84c47104a41ebbd0b5"
+    },
+    {
+      "path": "skills/xh-proj-org/scripts/rename_files.py",
+      "bytes": 12852,
+      "sha256": "1c07845fd8f569d1236a5e30e8cf6033889247cd259937076b5c2b89f32df0fa"
+    },
+    {
+      "path": "skills/xh-proj-org/SKILL.md",
+      "bytes": 9485,
+      "sha256": "b34209cfe13d3e48c90bce441311691da23d85faa308c3d268d66168ebd81068"
+    },
+    {
+      "path": "skills/xh-qc/SKILL.md",
+      "bytes": 6340,
+      "sha256": "ebd92902d2af20bb27c60e3dd0601759c0214918c05557cf7a6d0bc68095b465"
+    },
+    {
+      "path": "skills/xh-trich-hinh/SKILL.md",
+      "bytes": 3342,
+      "sha256": "31060ee776b47df36f7a6dcafb2774a6c098e3b4dba3111add31154064e45a9f"
+    },
+    {
+      "path": "skills/xh-trinh-sat/SKILL.md",
+      "bytes": 4795,
+      "sha256": "43cf13411a18459f0db412d1c192f790790d2529f97b68e80dfb8c87b35010d3"
+    },
+    {
+      "path": "skills/xh-tuvan/SKILL.md",
+      "bytes": 11055,
+      "sha256": "5a40938bed8ae7f7502b51d7f5b7d10afb7252fa13b31be25f84d7a913abea3b"
+    },
+    {
+      "path": "skills/xh-viet/SKILL.md",
+      "bytes": 9938,
+      "sha256": "8b503632ac88d89b5bd91943b2598d0adf539575c54c41efd489771319ae9bfe"
+    }
+  ]
+}

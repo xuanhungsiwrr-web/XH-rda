@@ -71,7 +71,6 @@ class Project:
           deps TEXT NOT NULL, meta TEXT NOT NULL, created TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS heads(artifact TEXT PRIMARY KEY, revision TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS approvals(revision TEXT PRIMARY KEY, actor TEXT, created TEXT);
-        CREATE TABLE IF NOT EXISTS calls(id TEXT PRIMARY KEY, state TEXT, data TEXT);
         ''')
 
     def close(self):
@@ -83,18 +82,18 @@ class Project:
         if (root / 'project.json').exists():
             return {'project': str(root), 'existing': True}
         for name in ['sources', 'research', 'evidence', 'specs', 'drafts', 'reviews',
-                     'edits', 'calculations', 'templates', 'outputs', 'feedback', '.xh/artifacts']:
+                     'edits', 'calculations', 'templates', 'outputs', 'feedback', '.xh/artifacts', '.ai/facts']:
             (root / name).mkdir(parents=True, exist_ok=True)
-        config = {'schema_version': 1, 'metadata': {'project_name': None,
+        config = {'schema_version': 2, 'metadata': {'project_name': None,
             'consultant': None, 'investor': None, 'report_type': None, 'design_stage': None,
             'location': None, **(metadata or {})}, 'source_roots': [],
-            'execution': {'mode': 'incremental', 'max_parallel': 2},
-            'budget': {'max_calls': 20, 'max_usd': 2.0, 'max_input_bytes': 64000},
             'sections': []}
         atomic(root / 'project.json', encoded(config))
         p = cls(root)
         try:
             p.put('project', 'project.json', encoded(config), 'system')
+            p.put('project-facts', '.ai/PROJECT_FACTS.json', encoded(config['metadata']), 'system')
+            p.put('decisions', '.ai/DECISIONS.md', '# Quyết định dự án\n', 'system')
         finally:
             p.close()
         return {'project': str(root), 'existing': False, 'missing_metadata':
@@ -198,7 +197,8 @@ class Project:
         # Field-level artifacts avoid invalidating technical chapters on consultant-name changes.
         for key, value in values.items():
             if not re.fullmatch(r'[a-zA-Z0-9_-]+', key): raise ValueError('Invalid metadata key')
-            self.put('meta:' + key, 'evidence/metadata/' + key + '.json', encoded(value), 'human')
+            self.put('meta:' + key, '.ai/metadata/' + key + '.json', encoded(value), 'human')
+        self.put('project-facts', '.ai/PROJECT_FACTS.json', encoded(cfg['metadata']), 'human')
         return result
 
     def select_requirements(self, root, files):
@@ -241,7 +241,10 @@ class Project:
         if required != mapped | set(exclusions):
             raise ValueError('Coverage incomplete or contains unknown requirement IDs')
         definition = {'sections': sections, 'exclusions': exclusions}
-        return self.put('outline', 'specs/outline.json', encoded(definition), 'ai', ['requirements'])
+        deps = ['requirements']
+        if self.head('domain-request'):
+            deps += ['domain:extraction','domain:legal','domain:technical','knowledge-snapshot']
+        return self.put('outline', 'specs/outline.json', encoded(definition), 'ai', deps)
 
     def plan(self, mode='incremental', section=None, parallel=2):
         if mode not in ['all', 'section', 'incremental']: raise ValueError('Invalid mode')
@@ -296,22 +299,28 @@ class Project:
             equal = all(current.get(k) == candidate.get(k) for k in candidate if k != 'status')
             if equal: return {'artifact': aid, 'revision': old['id'], 'unchanged': True}
             candidate = {'status': 'conflict', 'candidates': current.get('candidates', [current]) + [candidate]}
-        return self.put(aid, 'evidence/facts/' + key + '.json', encoded(candidate), 'ai', actor=actor)
+        return self.put(aid, '.ai/facts/' + key + '.json', encoded(candidate), 'ai', actor=actor)
 
     def resolve_fact(self, key, candidate_index, actor):
         current = json.loads(self.read('fact:' + key))
         candidates = current.get('candidates', [current])
         if not actor or not 0 <= candidate_index < len(candidates): raise ValueError('Invalid approval selection')
         selected = {**candidates[candidate_index], 'status': 'verified'}
-        r = self.put('fact:' + key, 'evidence/facts/' + key + '.json', encoded(selected), 'human', actor=actor)
+        r = self.put('fact:' + key, '.ai/facts/' + key + '.json', encoded(selected), 'human', actor=actor)
         self.approve('fact:' + key, r['revision'], actor)
         return r
 
     def review(self, sid, findings, reviewer, coverage_checked=False):
         if not reviewer: raise ValueError('Reviewer identity required')
+        section = self.head('section:' + sid)
+        if section and reviewer == section['actor']:
+            raise ValueError('Reviewer must be independent of section author')
+        text = self.read('section:' + sid).decode('utf-8')
         for item in findings:
             if item.get('severity') not in ['critical', 'warning'] or not item.get('quote'):
                 raise ValueError('Findings need severity and quote')
+            if item['quote'] not in text:
+                raise ValueError('Finding quote must occur in the reviewed section')
         body = {'reviewer': reviewer, 'coverage_checked': bool(coverage_checked), 'findings': findings}
         return self.put('review:' + sid, 'reviews/' + sid + '.json', encoded(body), 'ai', ['section:' + sid])
 
@@ -341,9 +350,18 @@ class Project:
             parts.append(text)
         if final:
             missing += ['metadata:' + k for k,v in self.config()['metadata'].items() if v is None or v == '']
+            if self.head('domain-request'):
+                from xh_domain import next_tasks
+                pending = next_tasks(self).get('tasks', [])
+                if not pending or any(t['task'] != 'output' for t in pending):
+                    missing.append('domain workflow: unfinished stages')
         if missing: raise ValueError('Final blocked: ' + '; '.join(missing))
-        return self.put('report', 'outputs/report.md', '\n\n'.join(parts), 'system', deps,
+        result = self.put('report', 'outputs/report.md', '\n\n'.join(parts), 'system', deps,
                         {'stage': 'content-approved' if final else 'draft', 'word_layout_verified': False})
+        if final:
+            result['post_project_review'] = 'required'
+            result['project_complete'] = False
+        return result
 
     def status(self):
         return [{'artifact': r['artifact'], 'revision': r['revision'], 'stale': self.stale(r['artifact']),

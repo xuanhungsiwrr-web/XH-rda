@@ -1,0 +1,13 @@
+{
+  "input": {
+    "facts": [
+      {
+        "source": "fixture#p1",
+        "quote": "2 m",
+        "value": 2
+      }
+    ]
+  },
+  "expected_findings": [],
+  "explanation": "Synthetic regression for valid_evidence; fixture only, not project facts or approved knowledge."
+}

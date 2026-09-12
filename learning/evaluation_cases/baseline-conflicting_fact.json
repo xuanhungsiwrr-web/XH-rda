@@ -1,0 +1,15 @@
+{
+  "input": {
+    "facts": [
+      {
+        "source": "fixture",
+        "quote": "2 m / 3 m",
+        "status": "conflict"
+      }
+    ]
+  },
+  "expected_findings": [
+    "conflicting_fact"
+  ],
+  "explanation": "Synthetic regression for conflicting_fact; fixture only, not project facts or approved knowledge."
+}
