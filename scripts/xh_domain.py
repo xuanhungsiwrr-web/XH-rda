@@ -36,15 +36,15 @@ def migrate(p):
         cfg['schema_version'] = 2
         p.put('project', 'project.json', encoded(cfg), 'system')
     if not p.head('project-facts'):
-        p.put('project-facts', '.ai/PROJECT_FACTS.json', encoded(cfg['metadata']), 'system')
+        p.put('project-facts', p.path('ai','PROJECT_FACTS.json'), encoded(cfg['metadata']), 'system')
     if not p.head('decisions'):
-        p.put('decisions', '.ai/DECISIONS.md', '# Quyết định dự án\n', 'system')
+        p.put('decisions', p.path('ai','DECISIONS.md'), '# Quyết định dự án\n', 'system')
     for row in p.status():
         aid = row['artifact']
         if aid.startswith(('fact:', 'meta:')):
             h = p.head(aid)
             folder = 'facts' if aid.startswith('fact:') else 'metadata'
-            path = '.ai/' + folder + '/' + aid.split(':', 1)[1] + '.json'
+            path = p.path('ai', folder, aid.split(':', 1)[1] + '.json')
             if h['path'] != path:
                 if p.stale(aid): raise ValueError('Import external edits before migration: ' + aid)
                 p.put(aid, path, p.read(aid), 'system', list(json.loads(h['deps'])),
@@ -67,13 +67,13 @@ def start(root, request, metadata=None, library_root=None, sector=None):
             p.metadata({**(metadata or {}), 'report_type': kind})
             files = REPORTS[kind] + ([HYDRAULIC[kind]] if sector == 'thuy-loi' else [])
             p.select_requirements(library_root or os.getenv('XH_REPORT_LIBRARY') or PLUGIN/'packs/report-library', files)
-            p.put('domain-request', '.ai/REQUEST.json', encoded(definition), 'human')
+            p.put('domain-request', p.path('ai','REQUEST.json'), encoded(definition), 'human')
         from xh_learning import Learning
         with Learning() as kb:
             snapshot = kb.snapshot()
         # A run pins approved knowledge; resume cannot silently introduce new rules.
         if not p.head('knowledge-snapshot'):
-            p.put('knowledge-snapshot', '.ai/KNOWLEDGE_SNAPSHOT.json', encoded(snapshot), 'system')
+            p.put('knowledge-snapshot', p.path('ai','KNOWLEDGE_SNAPSHOT.json'), encoded(snapshot), 'system')
         return next_tasks(p)
     finally:
         p.close()
@@ -130,7 +130,7 @@ def next_tasks(p):
                     ['outline'] + ['section:'+s['id'] for s in json.loads(p.read('outline'))['sections']], 'report')]
     state = {'state': 'awaiting_capability', 'tasks': tasks,
              'resolution': 'Global Control resolves capability; domain never selects models or retries providers.'}
-    p.put('domain-state', '.ai/STATE.md', '# Trạng thái workflow\n\n```json\n'+json.dumps(state, ensure_ascii=False, indent=2)+'\n```\n', 'system')
+    p.put('domain-state', p.path('ai','STATE.md'), '# Trạng thái workflow\n\n```json\n'+json.dumps(state, ensure_ascii=False, indent=2)+'\n```\n', 'system')
     return state
 
 def accept(p, task_id, content, actor, findings=None, coverage_checked=False):
@@ -147,7 +147,7 @@ def accept(p, task_id, content, actor, findings=None, coverage_checked=False):
                          expected_deps={**t['input_revisions'], **{a:p.head(a)['id'] for a in re.findall(r'\{\{(fact:[^}]+)\}\}', content)}})
     if name.startswith('qa:'):
         return p.review(name.split(':')[1], findings or [], actor, coverage_checked)
-    return p.put(aid, '.ai/stages/'+name+'.md', content, 'ai', deps,
+    return p.put(aid, p.path('ai','stages',name+'.md'), content, 'ai', deps,
                  {'capability':t['capability'], 'task_id':task_id, 'verification':'candidate'}, actor,
                  expected_deps=t['input_revisions'])
 
@@ -157,10 +157,10 @@ def post_review(p, feedback, before_revision, lessons=None):
     if not isinstance(feedback, str) or not feedback.strip(): raise ValueError('Feedback required, including explicit no-change feedback')
     before = p.db.execute('SELECT * FROM revisions WHERE id=? AND artifact=?', (before_revision, 'report')).fetchone()
     if not before: raise ValueError('before_revision must identify an actual report revision')
-    old = (p.root/'.xh/artifacts'/before['hash']).read_text(encoding='utf-8')
+    old = p.blob_path(before['hash']).read_text(encoding='utf-8')
     new = p.read('report').decode('utf-8')
     diff = ''.join(difflib.unified_diff(old.splitlines(True), new.splitlines(True), fromfile='before', tofile='after'))
-    p.put('review-diff', '.ai/REVIEW_DIFF.md', diff or 'Không có thay đổi văn bản.\n', 'system', ['report'])
+    p.put('review-diff', p.path('edit_analysis','REVIEW_DIFF.md'), diff or 'Không có thay đổi văn bản.\n', 'system', ['report'])
     from xh_learning import Learning
     candidates, global_handoffs = [], []
     with Learning() as kb:
@@ -170,7 +170,7 @@ def post_review(p, feedback, before_revision, lessons=None):
                 global_handoffs.append({'destination':'GLOBAL_CONTROL', 'payload':lesson})
             elif scope == 'project':
                 key = digest(encoded(lesson))[:16]
-                p.put('project-lesson:'+key, '.ai/lessons/'+key+'.json', encoded(lesson), 'human')
+                p.put('project-lesson:'+key, p.path('learning_candidates','project-'+key+'.json'), encoded(lesson), 'human')
             else:
                 candidates.append(kb.candidate(**lesson))
         records = [{'id':r['id'], 'status':r['status']} for r in candidates]
@@ -181,7 +181,7 @@ def post_review(p, feedback, before_revision, lessons=None):
     body = {'feedback':feedback, 'before_revision':before_revision, 'after_revision':p.head('report')['id'],
             'candidate_ids':candidate_ids, 'global_handoff_count':len(global_handoffs),
             'no_reusable_lesson':not records}
-    p.put('post-review', '.ai/POSTMORTEM.md', '# Post-Project Review\n\n'+json.dumps(body, ensure_ascii=False, indent=2),
+    p.put('post-review', p.path('ai','POSTMORTEM.md'), '# Post-Project Review\n\n'+json.dumps(body, ensure_ascii=False, indent=2),
           'human', ['report','review-diff'])
     return {**body, 'global_handoffs':global_handoffs, 'next':'Validate candidates; explicit approval is required before promotion.'}
 
@@ -194,7 +194,7 @@ def complete(p):
     with Learning() as kb:
         pending = [lid for lid in body['candidate_ids'] if kb.get(lid)['status'] not in ['approved','rejected','deprecated']]
     if pending: raise ValueError('Learning validation/approval pending: '+', '.join(pending))
-    result = p.put('completion', '.ai/COMPLETION.json', encoded({'report_revision':p.head('report')['id'],
+    result = p.put('completion', p.path('ai','COMPLETION.json'), encoded({'report_revision':p.head('report')['id'],
         'knowledge_snapshot':json.loads(p.read('knowledge-snapshot')) if p.head('knowledge-snapshot') else None}),
         'system', ['report','post-review'])
     return {**result, 'project_complete':True, 'word_layout_verified':False,

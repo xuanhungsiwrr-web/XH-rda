@@ -11,7 +11,7 @@ import zipfile
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from xh_core import Project, relative, library
-from xh_artifacts import edit_guard, retrieve, attachment, render, export_project
+from xh_artifacts import edit_guard, retrieve, attachment, render, export_project, ingest
 from xh_web import clean_html
 
 class WorkspaceTests(unittest.TestCase):
@@ -55,7 +55,7 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_human_edits_not_overwritten(self):
         self.p.section('A','# A\nOriginal')
-        (self.root/'drafts/A.md').write_text('User changed',encoding='utf-8')
+        (self.root/self.p.path('drafts','A.md')).write_text('User changed',encoding='utf-8')
         with self.assertRaises(ValueError): self.p.section('A','AI overwrite')
         self.assertTrue(self.p.stale('section:A'))
 
@@ -123,28 +123,48 @@ class WorkspaceTests(unittest.TestCase):
         self.assertTrue(edit_guard('Height {{fact:h}}','Cao trình {{fact:h}}')['protected_content_preserved'])
 
     def test_attachment_and_archive(self):
-        (self.root/'calculations/a.xlsx').write_bytes(b'fixture-binary')
-        attachment(self.p,'calc','calculations/a.xlsx','Result from sheet1!B2')
+        calculation=self.root/self.p.path('source_snapshots','calculations','a.xlsx')
+        calculation.parent.mkdir(parents=True,exist_ok=True)
+        calculation.write_bytes(b'fixture-binary')
+        attachment(self.p,'calc',calculation.relative_to(self.root).as_posix(),'Result from sheet1!B2')
         self.p.section('A','Result',deps=['attachment:calc'])
         out=Path(self.tmp.name)/'export.zip'; export_project(self.p,out)
         with zipfile.ZipFile(out) as z:
-            self.assertIn('calculations/a.xlsx',z.namelist())
-            self.assertIn('.xh/state.sqlite',z.namelist())
+            self.assertIn(self.p.path('source_snapshots','calculations','a.xlsx'),z.namelist())
+            self.assertIn(self.p.path('state_db'),z.namelist())
+
+    def test_ingest_does_not_modify_external_source(self):
+        external=Path(self.tmp.name)/'external-source.txt'; external.write_bytes(b'authoritative')
+        before=external.read_bytes()
+        snapshot=self.root/self.p.path('source_snapshots','external-source.txt')
+        snapshot.parent.mkdir(parents=True,exist_ok=True); snapshot.write_bytes(before)
+        ingest(self.p,snapshot.relative_to(self.root).as_posix(),source_id='external')
+        self.assertEqual(external.read_bytes(),before)
 
     def test_render_one_document_and_missing_template_style(self):
         import docx
         self.write_all()
-        d=docx.Document(); d.save(self.root/'templates/basic.docx')
+        template_dir=self.root/self.p.path('templates'); template_dir.mkdir(parents=True,exist_ok=True)
+        d=docx.Document(); d.save(template_dir/'basic.docx')
         styles={k:'Normal' for k in ['than_bai','bullet','so_thu_tu','o_tieu_de','o_noi_dung',
                 'caption_bang','doan_chua_anh','caption_hinh']}
         styles.update(heading=['Heading '+str(i) for i in range(1,7)],bang='Table Grid')
-        (self.root/'templates/contract.json').write_text(json.dumps({'styles':styles}),encoding='utf-8')
-        result=render(self.p,'templates/basic.docx','templates/contract.json')
+        (template_dir/'contract.json').write_text(json.dumps({'styles':styles}),encoding='utf-8')
+        result=render(self.p,self.p.path('templates','basic.docx'),self.p.path('templates','contract.json'))
         rendered=docx.Document(self.root/result['path'])
         text='\n'.join(p.text for p in rendered.paragraphs)
         self.assertTrue(all('Content '+s in text for s in ['A','B','C']))
+        for sid in ['A','B','C']:
+            self.p.review(sid,[],'independent-reviewer',True)
+            self.p.approve('section:'+sid,self.p.head('section:'+sid)['id'],'user')
+        final=render(self.p,self.p.path('templates','basic.docx'),self.p.path('templates','contract.json'),
+                     final=True,release_id='REPORT_R01',output_name='report-r01.docx')
+        self.assertEqual((self.root/final['output_path']).read_bytes(),
+                         (self.root/final['feedback_path']).read_bytes())
+        self.assertTrue(final['output_path'].startswith('40_Outputs/'))
+        self.assertTrue(final['feedback_path'].startswith('50_Feedback/'))
         styles['than_bai']='MissingStyle'
-        (self.root/'templates/contract.json').write_text(json.dumps({'styles':styles}),encoding='utf-8')
-        with self.assertRaises(ValueError): render(self.p,'templates/basic.docx','templates/contract.json')
+        (template_dir/'contract.json').write_text(json.dumps({'styles':styles}),encoding='utf-8')
+        with self.assertRaises(ValueError): render(self.p,self.p.path('templates','basic.docx'),self.p.path('templates','contract.json'))
 
 if __name__=='__main__': unittest.main()

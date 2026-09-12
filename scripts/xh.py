@@ -5,8 +5,17 @@ from pathlib import Path
 import sys
 from xh_core import Project, PLUGIN, library, relative
 from xh_artifacts import ingest, retrieve, attachment, edit_guard, render, export_project, templates
+from xh_delivery import delivery_status, import_feedback
+from xh_layout import LAYOUT_VERSION, V3_PATHS
 
 def run(action, root, data):
+    if action in ['workspace-preflight','workspace-dry-run','workspace-migrate','workspace-verify','workspace-rollback','workspace-resume']:
+        from xh_migration import preflight, apply, verify, rollback
+        actions = {'workspace-preflight':preflight, 'workspace-dry-run':preflight,
+                   'workspace-migrate':apply, 'workspace-resume':apply, 'workspace-verify':verify,
+                   'workspace-rollback':lambda value: rollback(value, data.get('migration_id'))}
+        return actions[action](root)
+    if action == 'layout': return {'layout_version':LAYOUT_VERSION, 'paths':V3_PATHS}
     if action == 'init': return Project.init(root, data.get('metadata'))
     if action == 'start':
         from xh_domain import start
@@ -35,7 +44,11 @@ def run(action, root, data):
         if action == 'retrieve': return retrieve(p, **data)
         if action == 'attachment': return attachment(p, **data)
         if action == 'edit-guard': return edit_guard(**data)
-        if action == 'render': return render(p, **data)
+        if action in ['render','release']:
+            if action == 'release': data = {**data, 'final':True}
+            return render(p, **data)
+        if action == 'delivery-status': return delivery_status(p, **data)
+        if action == 'import-feedback': return import_feedback(p, **data)
         if action == 'templates': return templates(p)
         if action == 'export': return export_project(p, **data)
         if action == 'register':

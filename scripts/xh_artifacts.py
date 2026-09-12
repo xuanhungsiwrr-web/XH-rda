@@ -8,6 +8,7 @@ import sys
 import zipfile
 from collections import Counter
 from xh_core import PLUGIN, atomic, digest, encoded, fold, relative, stamp
+from xh_delivery import deliver_bytes
 
 def ingest(project, path, source_id=None, source_url=None, source_kind='PROJECT'):
     file = relative(project.root, path)
@@ -57,12 +58,13 @@ def attachment(project, name, file, summary, deps=None, actor='user'):
     if not re.fullmatch(r'[A-Za-z0-9_-]+',name): raise ValueError('Invalid attachment ID')
     path = relative(project.root,file)
     source = project.put('calculation:' + name, file, path.read_bytes(), 'human', deps, actor=actor)
-    result = project.put('attachment:' + name, 'calculations/' + name + '-summary.md', summary,
+    summary_path = project.path('evidence', 'calculation-summaries', name + '-summary.md')
+    result = project.put('attachment:' + name, summary_path, summary,
         'human', ['calculation:' + name], {'original_path':file}, actor)
     return {**result, 'original':source,
             'next':'Review formulas/units/source cells; approve facts explicitly. Insert summary MD, not a binary DOCX merge.'}
 
-def render(project, template, template_map, final=False, section=None):
+def render(project, template, template_map, final=False, section=None, release_id=None, output_name=None, simulate_failure_after_output=False):
     import yaml
     template_path = relative(project.root, template)
     contract_path = relative(project.root, template_map)
@@ -86,7 +88,7 @@ def render(project, template, template_map, final=False, section=None):
     for key, target in {'project_name':'TEN_DU_AN','consultant':'DON_VI_TU_VAN','investor':'CHU_DAU_TU',
         'report_type':'LOAI_BAO_CAO','design_stage':'GIAI_DOAN','location':'DIA_DIEM'}.items():
         info[target] = info.get(key.upper(),'{{TODO: '+key+'}}')
-    build = project.root / '.xh/render'
+    build = project.layout.at(project.root, 'render')
     build.mkdir(exist_ok=True)
     atomic(build/'content.md', content)
     atomic(build/'facts.yaml',yaml.safe_dump(facts,allow_unicode=True).encode())
@@ -100,11 +102,16 @@ def render(project, template, template_map, final=False, section=None):
                           env={**os.environ,'PYTHONUTF8':'1'})
     if proc.returncode or not out.exists():
         raise ValueError('Render rejected: '+proc.stdout[-2000:]+proc.stderr[-1000:])
+    if final:
+        if not release_id: raise ValueError('Final render requires release_id')
+        return deliver_bytes(project, release_id, out.read_bytes(), output_name,
+                             simulate_failure_after_output=simulate_failure_after_output)
     suffix = '-'+section if section else ''
-    result = project.put('word'+suffix,'outputs/report'+suffix+'.docx',out.read_bytes(),'system',
-                         report_deps+['template','template-map','project'],
-                         {'stage':'needs-word-layout-check','rendered_at':stamp()})
-    return {**result,'next':'Update fields in Word, verify TOC/captions/layout, then approve Word revision'}
+    preview_name = 'report'+suffix+'.docx'
+    result = project.put('word-preview'+suffix, project.path('render','previews',preview_name),
+                         out.read_bytes(),'system', report_deps+['template','template-map','project'],
+                         {'stage':'preview-only','rendered_at':stamp()})
+    return {**result,'next':'Preview only; final release requires release_id and creates an immutable pair'}
 
 def export_project(project, destination):
     """Export snapshots + owned project files, not arbitrary credential/config files."""
@@ -112,7 +119,7 @@ def export_project(project, destination):
     if out.exists(): raise ValueError('Export destination exists')
     paths = {'project.json'}
     for r in project.db.execute('SELECT path,hash FROM revisions'):
-        paths.add(r['path']); paths.add('.xh/artifacts/'+r['hash'])
+        paths.add(r['path']); paths.add(project.path('artifacts', r['hash']))
     # Freeze DB via SQLite backup; do not zip a live SQLite database.
     import sqlite3, tempfile
     with tempfile.TemporaryDirectory() as temp:
@@ -124,7 +131,7 @@ def export_project(project, destination):
             for name in sorted(paths):
                 p = relative(project.root,name)
                 if p.is_file(): z.write(p,name)
-            z.write(dbpath,'.xh/state.sqlite')
+            z.write(dbpath,project.path('state_db'))
     return {'path':str(out),'note':'Contains registered artifacts and revisions only. Register input files before export.'}
 
 
@@ -132,7 +139,7 @@ def templates(project):
     """Discover per-template manifests without guessing organization from a filename."""
     metadata = project.config()['metadata']
     candidates = []
-    for file in sorted((project.root/'templates').glob('*.template.json')):
+    for file in sorted(project.layout.at(project.root,'templates').glob('*.template.json')):
         try:
             manifest = json.loads(file.read_text(encoding='utf-8'))
             target = relative(project.root, manifest['file'])

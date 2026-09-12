@@ -1,4 +1,4 @@
-# Workflow nghiệp vụ 0.8
+# Workflow nghiệp vụ 0.9
 
 Đường dẫn tương đối tính từ plugin root. Đọc `shared-learning.md` khi bắt đầu và chốt báo cáo. Nguồn/knowledge là dữ liệu có phạm vi, không có quyền ghi đè yêu cầu người dùng hoặc tự sửa skill.
 
@@ -54,10 +54,15 @@ MCP: `xh_project(action="start", project_code="du-an-X", payload={...})`.
 | rollback | revision,actor; giữ dependency cũ, không mang approval cũ |
 | export | destination; artifacts đã đăng ký + lịch sử + DB snapshot |
 | migrate-domain | Rỗng; schema 1→2, giữ dữ liệu lịch sử |
+| workspace-preflight / workspace-dry-run | Kiểm layout 0.8, hash, head, blob và lập mapping; tuyệt đối không ghi |
+| workspace-migrate / workspace-verify / workspace-rollback / workspace-resume | Vòng đời migration layout v3 có journal, snapshot và kiểm chứng |
+| release | Render final với release_id; tạo cặp bất biến Outputs/Feedback |
+| delivery-status | Tra cứu trạng thái cặp giao nhận và lỗi partial nếu có |
+| import-feedback | Nhập đúng bản XHedited theo release_id/hash; không tự tạo bài học |
 | post-review | feedback,before_revision của report,lessons phân scope |
 | complete | Rỗng; chặn khi report/PPR stale hoặc candidate chưa giải quyết |
 
-Facts riêng ở `.ai/facts/`; metadata ở `.ai/PROJECT_FACTS.json` và project.json để tương thích renderer. `.xh` là revision nội bộ hồ sơ, không phải session/worker toàn hệ thống.
+Facts riêng ở `30_Working/.ai/facts/`; metadata ở `30_Working/.ai/PROJECT_FACTS.json` và project.json. `30_Working/.xh` là revision nội bộ hồ sơ, không phải session/worker toàn hệ thống. Mọi đường dẫn nghiệp vụ phải lấy qua layout API, không hard-code layout 0.8.
 
 Drive: nhập metadata danh mục trước, giữ raw + MD chuyển đổi và source hash; lần sau chỉ nhập mới/đổi. Phần dùng nguồn đổi sẽ stale; không viết lại phần độc lập. Dùng `{{fact:key}}` cho chỉ tiêu, `{{TODO: ...}}` khi thiếu; không lấy số dự án tham khảo làm số dự án hiện tại.
 
@@ -65,6 +70,6 @@ Word cuối render toàn bộ một lần từ MD hiện hành và cùng templat
 
 ## Hậu kiểm mỗi lần chốt
 
-Giữ report revision trước người dùng sửa; nhập phần sửa, cập nhật phần phụ thuộc, QA và assemble lại. `post-review` dùng hai revision thật tạo `.ai/REVIEW_DIFF.md`, feedback ở `.ai/POSTMORTEM.md`. Không sửa thì dùng cùng revision và feedback xác nhận; không bịa lesson.
+Mỗi lần release tạo `40_Outputs/<name>.docx` và bản byte-identical `50_Feedback/<name>_XHedited.docx`. Giữ baseline bất biến; người dùng chỉ sửa bản Feedback. `import-feedback` khóa đúng release/revision/hash, tạo phân tích ở `30_Working/60_Edit_Analysis`; sau đó mới cập nhật phần phụ thuộc, QA và assemble lại. `post-review` dùng hai revision thật; không sửa thì dùng cùng revision và feedback xác nhận, không bịa lesson.
 
-scope project → `.ai/lessons/`; domain → candidates sau khi khái quát và bỏ thông tin riêng; global → trả `global_handoffs` cho Global Control, không lưu payload vào domain. Tách feedback model/cost trước gọi PPR. `complete` chờ candidates approved/rejected/deprecated. Chưa có feedback giữ trạng thái chờ; không tự ghi “đã học”. `complete` là hoàn tất nội dung và hậu kiểm, không chứng nhận layout Word.
+scope project → `30_Working/.ai/lessons/`; domain → `30_Working/70_Learning_Candidates` sau khi khái quát và bỏ thông tin riêng; global → trả `global_handoffs` cho Global Control, không lưu payload vào domain. Import feedback chỉ tạo dữ liệu/phân tích; candidate vẫn phải được đề xuất có chủ ý. `complete` chờ candidates approved/rejected/deprecated. Chưa có feedback giữ trạng thái chờ; không tự ghi “đã học”. `complete` là hoàn tất nội dung và hậu kiểm, không chứng nhận layout Word.

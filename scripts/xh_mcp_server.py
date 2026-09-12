@@ -12,7 +12,9 @@ mcp = FastMCP('xh-tuvan')
 def xh_project(action: str, project_code: str, payload: dict) -> str:
     """Operate a report project. Actions: init,status,metadata,requirements,outline,plan,
     section,fact,resolve-fact,review,approve,assemble,context,register,rollback,
-    start,domain-next,domain-accept,post-review,complete,migrate-domain.
+    start,domain-next,domain-accept,post-review,complete,migrate-domain,layout,
+    workspace-preflight,workspace-dry-run,workspace-migrate,workspace-verify,
+    workspace-rollback,workspace-resume,render,release,delivery-status,import-feedback.
     Approve/resolve-fact only after actual user approval; payload actor identifies the user.
     Returns revision/paths rather than large source documents. Read the workflow reference.
     """

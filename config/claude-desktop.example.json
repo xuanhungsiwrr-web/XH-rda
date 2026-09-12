@@ -1,15 +1,15 @@
 {
   "mcpServers": {
     "xh-tuvan": {
-      "command": "D:\\AI_Space\\AI_Config\\PLUGINS\\xh-tuvan-0.6.0\\.venv\\Scripts\\python.exe",
+      "command": "<python-from-the-installed-0.9.0-environment>",
       "args": [
-        "D:\\AI_Space\\AI_Config\\PLUGINS\\xh-tuvan-0.6.0\\scripts\\xh_mcp_server.py"
+        "<installed-plugin-root>\\scripts\\xh_mcp_server.py"
       ],
       "env": {
-        "XH_PROJECTS_ROOT": "D:\\AI_Space\\AI_Workspace\\Projects",
-        "XH_REPORT_LIBRARY": "D:\\AI_Space\\AI_Workspace\\NoiDung_CacBaoCao",
+        "XH_PROJECTS_ROOT": "<persistent-filesystem>\\02_Workspace\\projects",
+        "XH_REPORT_LIBRARY": "<persistent-filesystem>\\04_Library\\references\\report-library",
         "PYTHONUTF8": "1",
-        "XH_TUVAN_KNOWLEDGE_ROOT": "D:/AI_Space/AI_Workspace/SharedKnowledge/xh-tuvan"
+        "XH_TUVAN_KNOWLEDGE_ROOT": "<persistent-local-non-synced-filesystem>/xh-tuvan"
       }
     }
   }

@@ -93,7 +93,7 @@ class DomainTests(unittest.TestCase):
             p.put('project','project.json',encoded(cfg),'human')
             p.put('fact:x','evidence/facts/x.json',encoded({'value':2}),'human')
             self.assertTrue(migrate(p)['migrated']); self.assertFalse(migrate(p)['migrated'])
-            self.assertEqual(p.head('fact:x')['path'],'.ai/facts/x.json')
+            self.assertEqual(p.head('fact:x')['path'],p.path('ai','facts','x.json'))
             self.assertNotIn('budget',p.config())
             self.assertTrue((self.root/'evidence/facts/x.json').exists())
         finally:p.close()

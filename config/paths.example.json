@@ -1,6 +1,9 @@
 {
-  "projects_root": "<choose project parent>",
+  "ai_space_drive_folder_id": "1kO9wbjTqSxB-NDLSZqfGuRHwc-Eqkmee",
+  "projects_root": "<persistent-filesystem>/02_Workspace/projects",
   "report_library": "packs/report-library",
-  "template_roots": [],
-  "shared_knowledge_root": "<shared local root used by both hosts>"
+  "template_roots": ["<persistent-filesystem>/04_Library/templates"],
+  "shared_knowledge_operational_root": "<persistent-local-non-synced-filesystem>/xh-tuvan",
+  "knowledge_projection_folder": "03_Knowledge/xh-tuvan/published",
+  "note": "Drive IDs/URLs are source identities; do not convert them to a filesystem path or host live SQLite on Drive sync."
 }

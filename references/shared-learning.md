@@ -1,8 +1,8 @@
-# Shared Learning 0.8
+# Shared Learning 0.9
 
-Hai Master đặt `XH_TUVAN_KNOWLEDGE_ROOT` tới cùng thư mục ngoài model. Đọc snapshot approved + project/.ai/STATE.md, DECISIONS.md, PROJECT_FACTS.json khi vào việc. Snapshot dự án giữ plugin_version, KB ID, rule/hash/evidence/phê duyệt. Kho ban đầu rỗng là hợp lệ; không giả lập bài học đã được anh Hưng duyệt.
+Hai Master đặt `XH_TUVAN_KNOWLEDGE_ROOT` tới cùng một thư mục bền vững trên filesystem cục bộ/volume được khóa, tuyệt đối không dùng thư mục Google Drive đang sync cho SQLite hoạt động. Đọc snapshot approved + `30_Working/.ai/STATE.md`, `DECISIONS.md`, `PROJECT_FACTS.json` khi vào việc. Snapshot dự án giữ plugin_version, KB ID, rule/hash/evidence/phê duyệt. Kho ban đầu rỗng là hợp lệ; không giả lập bài học đã được anh Hưng duyệt.
 
-Phân loại trước lưu: facts/đơn vị/phương án riêng vào project/.ai/; quy tắc viết, extraction, QA, pháp lý/kỹ thuật tái sử dụng thành domain candidate; hiệu năng, token, giá, provider vào Global Control. REVIEWER kiểm scope và thông tin riêng, không chỉ tin nhãn tác giả.
+Phân loại trước lưu: facts/đơn vị/phương án riêng vào `30_Working/.ai/`; quy tắc viết, extraction, QA, pháp lý/kỹ thuật tái sử dụng thành domain candidate; hiệu năng, token, giá, provider vào Global Control. REVIEWER kiểm scope và thông tin riêng, không chỉ tin nhãn tác giả.
 
 ```text
 candidate → validation → operator approval → approved knowledge
@@ -26,4 +26,4 @@ Sửa skill: tạo change-request với lesson_id approved, paths, actor; thực
 
 Anh Hưng có thể nói “Giữ các phần còn lại, sửa mục X theo file Y; số liệu này chỉ thuộc dự án”. MASTER nhập bản sửa và giữ diff. Nếu muốn học chung: “Cách sửa này nên dùng cho báo cáo tương tự; đưa thành đề xuất bài học.” Hệ thống trình rule, phạm vi, ngoại lệ, evidence và case để anh duyệt. “Duyệt bài học L-...” chỉ áp dụng đúng nội dung/hash đã trình, không duyệt mọi sửa skill tương lai.
 
-`learning/registry.sqlite` là nguồn giao dịch; JSONL ledger, knowledge JSON, changelog và metrics là projection được phục hồi sau gián đoạn. Sao lưu toàn shared root; không sửa projection bằng tay. SQLite dùng nhiều tiến trình trên một filesystem cục bộ, không dùng hai DB đồng thời trong hai thư mục Drive đang sync. Đồng bộ đa máy thuộc hạ tầng. Metrics ở đây chỉ là trạng thái bài học/kiểm thử, không chứa chi phí hay đánh giá model.
+`learning/registry.sqlite` là nguồn giao dịch; JSONL ledger, knowledge JSON, changelog và metrics là projection được phục hồi trong cùng transaction ghi. Sao lưu toàn shared root; không sửa projection bằng tay. Trao đổi đa máy chỉ qua gói projection read-only: export, kiểm hash và stage-import; approval không được chuyển theo gói. Đồng bộ DB đa máy thuộc hạ tầng ngoài plugin. Metrics ở đây chỉ là trạng thái bài học/kiểm thử, không chứa chi phí hay đánh giá model.

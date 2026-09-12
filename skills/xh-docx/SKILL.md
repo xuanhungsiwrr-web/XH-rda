@@ -7,7 +7,7 @@ description: "Render Markdown thành Word theo template được chọn; preview
 
 Đọc template manifest trước. Chọn theo tổ chức, loại báo cáo, bước thiết kế, ngôn ngữ; không chọn chỉ theo tên file. Snapshot template + style contract trong project/templates. Mọi style bắt buộc phải tồn tại. Dùng `render` qua runtime hoặc render_report.py --template-map.
 
-Preview một section để rà nhanh được phép. Bản giao cuối luôn render một lần từ các MD hiện hành theo thứ tự outline, không ghép các DOCX đã render riêng. Dùng MD đã có, không gọi AI viết lại chỉ để render. Heading/numbering/caption/TOC do cùng template quản lý. File tính toán Excel/Word lưu riêng; đưa bảng/kết quả hoặc summary Markdown đã duyệt vào report.
+Preview một section để rà nhanh được phép. Bản giao cuối luôn render một lần từ các MD hiện hành theo thứ tự outline, không ghép các DOCX đã render riêng. Final yêu cầu `release_id`, tạo baseline bất biến ở `40_Outputs` và bản byte-identical `_XHedited.docx` ở `50_Feedback`; retry không ghi đè bản người dùng đã sửa. Dùng MD đã có, không gọi AI viết lại chỉ để render. Heading/numbering/caption/TOC do cùng template quản lý. File tính toán đầu vào được snapshot như nguồn; đưa bảng/kết quả hoặc summary Markdown đã duyệt vào report.
 
 Sau render cập nhật fields bằng Word, kiểm mục lục/caption/layout thực tế. Runtime chỉ ghi needs-word-layout-check; chưa có Word thì nói rõ chưa xác minh dàn trang. Để lại TODO/thiếu facts có thể tạo draft, không chứng nhận final.
 

@@ -5,6 +5,7 @@ import re
 import sqlite3
 from pathlib import Path
 from xh_core import PLUGIN, atomic, encoded, digest, stamp, relative
+from xh_layout import PLUGIN_VERSION
 
 def check_case(record):
     """Deterministic evidence guard; semantic correctness still requires independent review."""
@@ -20,7 +21,13 @@ def check_case(record):
 
 class Learning:
     def __init__(self, root=None):
-        self.root = Path(root or os.getenv('XH_TUVAN_KNOWLEDGE_ROOT') or PLUGIN).resolve()
+        configured = root or os.getenv('XH_TUVAN_KNOWLEDGE_ROOT')
+        if not configured:
+            raise ValueError('Configure XH_TUVAN_KNOWLEDGE_ROOT as a persistent local operational store')
+        self.root = Path(configured).resolve()
+        lowered = str(self.root).lower()
+        if any(marker in lowered for marker in ('\\my drive\\', '/my drive/', '\\google drive\\', '/google drive/')):
+            raise ValueError('Refusing to open live learning SQLite on a synced Drive path; use export/import adapter')
         for folder in ['knowledge/approved','knowledge/candidates','knowledge/rejected','knowledge/deprecated',
                        'learning/evaluation_cases','learning/metrics','learning/change_requests']:
             (self.root/folder).mkdir(parents=True, exist_ok=True)
@@ -63,15 +70,13 @@ class Learning:
         self.db.execute('INSERT OR REPLACE INTO '+table+' VALUES(?,?)', (row['id'], json.dumps(row,ensure_ascii=False)))
         self.db.execute('INSERT INTO events(data) VALUES(?)', (json.dumps({'id':row['id'], 'event':event,
             'actor':actor, 'date':stamp(), 'record':row},ensure_ascii=False),))
-        self.db.commit()
-        self.db.execute('BEGIN IMMEDIATE')
         try: self.project(); self.db.commit()
         except BaseException: self.db.rollback(); raise
         return row
 
     def candidate(self, title, rule, evidence, author, scope='domain', category='workflow', risk='normal', cases=None):
         if scope == 'global': return {'destination':'GLOBAL_CONTROL','stored':False}
-        if scope != 'domain': raise ValueError('Project facts belong in project/.ai/')
+        if scope != 'domain': raise ValueError('Project facts belong in the project layout internal AI area')
         if category not in ['writing','technical','legal','qa','workflow']: raise ValueError('Not a domain category')
         if risk not in ['normal','high']: raise ValueError('Invalid risk')
         if not all(isinstance(v,str) and v.strip() for v in [title,rule,author]): raise ValueError('Title, rule and author required')
@@ -136,7 +141,7 @@ class Learning:
         rows=[json.loads(r[0]) for r in self.db.execute('SELECT data FROM lessons ORDER BY id')]
         approved=[r for r in rows if r['status']=='approved']
         return {'snapshot':'KB-'+digest(encoded(approved))[:20], 'lessons':approved,
-                'plugin_version':'0.8.0', 'ledger_events':self.db.execute('SELECT count(*) FROM events').fetchone()[0]}
+                'plugin_version':PLUGIN_VERSION, 'ledger_events':self.db.execute('SELECT count(*) FROM events').fetchone()[0]}
 
     def change_request(self, lesson_id, paths, actor):
         row=self.get(lesson_id)
