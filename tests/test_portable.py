@@ -11,8 +11,9 @@ import zipfile
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from xh_core import Project, relative, library
+from xh_router import conductor, rank, execute
 from xh_artifacts import edit_guard, retrieve, attachment, render, export_project
-from xh_web import clean_html
+from xh_web import clean_html, scrape, legal_search
 
 class WorkspaceTests(unittest.TestCase):
     def setUp(self):
@@ -113,10 +114,23 @@ class WorkspaceTests(unittest.TestCase):
             self.p.put('candidate:x','reviews/x.md','Output from old input',deps=['source:x'],
                        expected_deps={'source:x':old})
 
-    def test_html_normalization_preserves_table(self):
-        raw='<main><p>'+'Source evidence. '*20+'</p><table><tr><th>m</th></tr><tr><td>2</td></tr></table></main>'
-        text,links=clean_html(raw,'https://example.com')
-        self.assertIn('| 2 |',text)
+    def test_scrape_saved_under_research_with_cache(self):
+        html=b'<html><main><h1>Report</h1><p>'+b'Useful source. '*20+b'</p><table><tr><th>m</th></tr><tr><td>2</td></tr></table></main></html>'
+        with patch('xh_web.fetch',return_value=(html,'https://example.com')) as fetch:
+            result=scrape(self.p,'https://example.com'); scrape(self.p,'https://example.com')
+            self.assertEqual(fetch.call_count,1)
+        self.assertTrue(result['path'].startswith('research/'))
+        self.assertIn('| 2 |',self.p.read(result['artifact']).decode())
+        self.assertTrue(retrieve(self.p,'Useful')['matches'])
+
+    def test_legal_no_year_default_and_compact_response(self):
+        response=unittest.mock.Mock()
+        response.json.return_value={'choices':[{'message':{'content':'Document body'}}],
+                                  'citations':['https://vbpl.vn/example'],'usage':{'total_tokens':10}}
+        with patch.dict(os.environ,{'PERPLEXITY_API_KEY':'fake'}),patch('xh_web.requests.post',return_value=response) as post:
+            result=legal_search(self.p,'Find applicable document')
+            self.assertNotIn('search_recency_filter',post.call_args.kwargs['json'])
+            self.assertNotIn('Document body',json.dumps(result))
 
     def test_humanizer_guard(self):
         self.assertFalse(edit_guard('Height {{fact:h}} 2m','Height 3m')['protected_content_preserved'])
@@ -146,5 +160,48 @@ class WorkspaceTests(unittest.TestCase):
         styles['than_bai']='MissingStyle'
         (self.root/'templates/contract.json').write_text(json.dumps({'styles':styles}),encoding='utf-8')
         with self.assertRaises(ValueError): render(self.p,'templates/basic.docx','templates/contract.json')
+
+class RouterTests(unittest.TestCase):
+    setUp = WorkspaceTests.setUp
+    tearDown = WorkspaceTests.tearDown
+    def model(self,id):
+        return {'id':id,'enabled':True,'adapter':'openai-chat','key_env':'TEST_KEY','base_url':'https://example.com',
+            'model':'fixture','capabilities':['writing'],'quality':0.9,'reliability':0.9,
+            'max_input_bytes':64000,'modalities':['text'],'estimated_cost_usd':0.01,'call_ceiling_usd':0.1}
+
+    def test_modality_gates_and_host(self):
+        self.assertEqual(conductor('claude-desktop')['preferred'],['Opus'])
+        self.assertEqual(conductor('chatgpt')['preferred'],['Astra','Sol'])
+        with patch.dict(os.environ,{'TEST_KEY':'fake'}):
+            self.assertFalse(rank({'models':[self.model('deepseek')]},
+                                 {'capabilities':['writing'],'modality':'pdf'})['candidates'])
+
+    def test_fallback_and_idempotent_candidate(self):
+        calls=[]
+        def fake(model,prompt,max_output):
+            calls.append(model['id'])
+            if model['id']=='first': raise urllib.error.HTTPError('https://example.com',503,'Unavailable',{},None)
+            return {'content':'# Candidate','usage':{'prompt_tokens':10,'completion_tokens':5}}
+        registry={'models':[self.model('first'),self.model('deepseek')]}
+        task={'objective':'Write','capabilities':['writing']}
+        with patch.dict(os.environ,{'TEST_KEY':'fake'}):
+            result=execute(self.p,registry,task,call=fake)
+            again=execute(self.p,registry,task,call=fake)
+        self.assertEqual(result['state'],'candidate')
+        self.assertEqual(calls,['first','deepseek']); self.assertTrue(again['cached'])
+
+    def test_uncertain_does_not_double_charge(self):
+        calls=[]
+        def timeout(*args): calls.append(1); raise TimeoutError()
+        with patch.dict(os.environ,{'TEST_KEY':'fake'}):
+            result=execute(self.p,{'models':[self.model('one'),self.model('two')]},
+                           {'objective':'Write','capabilities':['writing']},call=timeout)
+        self.assertEqual(result['state'],'uncertain'); self.assertEqual(len(calls),1)
+
+    def test_budget_blocks(self):
+        model=self.model('expensive'); model['call_ceiling_usd']=100
+        with patch.dict(os.environ,{'TEST_KEY':'fake'}):
+            result=execute(self.p,{'models':[model]},{'objective':'Write','capabilities':['writing']})
+        self.assertEqual(result['reason'],'budget')
 
 if __name__=='__main__': unittest.main()

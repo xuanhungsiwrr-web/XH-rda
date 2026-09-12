@@ -1,5 +1,3 @@
-> Lịch sử bản 0.7. Không áp dụng model routing/budget trong tài liệu này cho runtime 0.8. Xem ARCHITECTURE-0.8.md.
-
 # Kết quả kiểm thử 0.7.0
 
 Ngày 07/09/2026, Windows, Python 3.14.7 trong môi trường riêng của plugin.

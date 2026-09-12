@@ -1,6 +1,5 @@
 {
   "projects_root": "<choose project parent>",
   "report_library": "packs/report-library",
-  "template_roots": [],
-  "shared_knowledge_root": "<shared local root used by both hosts>"
+  "template_roots": []
 }

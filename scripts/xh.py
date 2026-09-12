@@ -4,21 +4,16 @@ import json
 from pathlib import Path
 import sys
 from xh_core import Project, PLUGIN, library, relative
+from xh_router import conductor, execute
 from xh_artifacts import ingest, retrieve, attachment, edit_guard, render, export_project, templates
 
 def run(action, root, data):
     if action == 'init': return Project.init(root, data.get('metadata'))
-    if action == 'start':
-        from xh_domain import start
-        return start(root, **data)
+    if action == 'conductor': return conductor(**data)
     if action == 'library': return library(data['root'], data.get('query', ''))
     p = Project(root)
     try:
         if action == 'status': return p.status()
-        if action in ['domain-next', 'domain-accept', 'post-review', 'complete', 'migrate-domain']:
-            from xh_domain import next_tasks, accept, post_review, complete, migrate
-            return {'domain-next': next_tasks, 'domain-accept': accept, 'post-review': post_review,
-                    'complete': complete, 'migrate-domain': migrate}[action](p, **data)
         if action == 'metadata': return p.metadata(data)
         if action == 'requirements': return p.select_requirements(**data)
         if action == 'outline': return p.define_sections(**data)
@@ -42,6 +37,11 @@ def run(action, root, data):
             # File must already be within project, e.g. imported via user's Drive connector.
             file = relative(p.root, data.pop('path'))
             return p.put(path=file.relative_to(p.root).as_posix(), data=file.read_bytes(), **data)
+        if action == 'execute':
+            registry = json.loads((PLUGIN / 'config/providers.json').read_text(encoding='utf-8'))
+            local = PLUGIN / 'config/providers.local.json'
+            if local.exists(): registry = json.loads(local.read_text(encoding='utf-8'))
+            return execute(p, registry, **data)
         raise ValueError('Unknown action: ' + action)
     finally:
         p.close()
