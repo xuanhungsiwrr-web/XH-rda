@@ -185,15 +185,29 @@ class Project:
         return ancestor in deps or any(self.depends_on(d, ancestor, seen) for d in deps)
 
     def stale(self, artifact, seen=None):
-        seen = set() if seen is None else set(seen)
-        if artifact in seen: return True
-        seen.add(artifact)
-        h = self.head(artifact)
-        if not h: return True
-        p = relative(self.root, h['path'])
-        if not p.is_file() or digest(p.read_bytes()) != h['hash']: return True
-        return any(not self.head(d) or self.head(d)['id'] != rev or self.stale(d, seen)
-                   for d, rev in json.loads(h['deps']).items())
+        """Check freshness once per dependency node while preserving cycle detection."""
+        memo = {}
+
+        def visit(current, path):
+            if current in memo: return memo[current]
+            if current in path:
+                return True
+            h = self.head(current)
+            if not h:
+                memo[current] = True
+                return True
+            target = relative(self.root, h['path'])
+            if not target.is_file() or digest(target.read_bytes()) != h['hash']:
+                memo[current] = True
+                return True
+            next_path = path | {current}
+            result = any(not self.head(dep) or self.head(dep)['id'] != revision
+                         or visit(dep, next_path)
+                         for dep, revision in json.loads(h['deps']).items())
+            memo[current] = result
+            return result
+
+        return visit(artifact, set() if seen is None else set(seen))
 
     def read(self, artifact):
         h = self.head(artifact)

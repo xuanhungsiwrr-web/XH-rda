@@ -18,6 +18,16 @@ HYDRAULIC = {
     'KTKT': 'TCVN_Lập Thuyết minh Báo cáo Kinh tế - Kỹ thuật Xây dựng.md',
 }
 
+def resolve_library_file(root, name):
+    """Match a requirements file by folded name so accent-free copies resolve too."""
+    root = Path(root)
+    if (root / name).exists(): return name
+    target = re.sub(r'[^a-z0-9]', '', fold(name))
+    for candidate in sorted(root.glob('*.md')):
+        if re.sub(r'[^a-z0-9]', '', fold(candidate.name)) == target:
+            return candidate.name
+    return name
+
 def report_type(request):
     q = re.sub(r'[^a-z0-9 ]', '', fold(request))
     choices = {'NCKT': ['nckt', 'nghien cuu kha thi'],
@@ -65,8 +75,10 @@ def start(root, request, metadata=None, library_root=None, sector=None):
             raise ValueError('Existing workflow differs; use a separate project/report workspace')
         if not previous:
             p.metadata({**(metadata or {}), 'report_type': kind})
+            root = library_root or os.getenv('XH_REPORT_LIBRARY') or PLUGIN/'packs/report-library'
             files = REPORTS[kind] + ([HYDRAULIC[kind]] if sector == 'thuy-loi' else [])
-            p.select_requirements(library_root or os.getenv('XH_REPORT_LIBRARY') or PLUGIN/'packs/report-library', files)
+            files = [resolve_library_file(root, f) for f in files]
+            p.select_requirements(root, files)
             p.put('domain-request', p.path('ai','REQUEST.json'), encoded(definition), 'human')
         from xh_learning import Learning
         with Learning() as kb:

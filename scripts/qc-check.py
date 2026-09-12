@@ -22,6 +22,23 @@ SÁU LUẬT (rút từ 28 điểm không khớp của BCKTKT Kè Khánh Hưng):
        L8 CHUA_DUYET  bản thảo dùng số đang ở trạng thái unverified trong _facts.yaml
        L10 SO_MUON    số mượn dự án khác thiếu dẫn nguồn / thiếu khuyến cáo khảo sát bổ sung
        L9 LOGIC_VAN   đếm tháng sai · "gần/khoảng" đi với số lẻ đến hàng đơn vị
+       L11 TU_LAP_LIEN_KE  từ lặp liền kề — thường do đơn vị của {{fact:}} đã có sẵn chữ mà
+                           câu văn viết thêm lần nữa (vd đơn vị "gói thầu" + câu văn cũng viết
+                           "gói thầu" → "...02-03 gói thầu gói thầu xây dựng..."). Ca thật: BCĐXCTĐT
+                           Kè Nhà Bè, 09/2026.
+       L12 DE_MUC_RONG     đề mục không có đoạn văn/bảng nào ngay sau trước đề mục kế tiếp
+       L13 TEN_DU_AN_LA    tên dự án THAM KHẢO lọt nguyên văn vào bản thảo dự án hiện tại — rò
+                           rỉ khi tái sử dụng báo cáo mẫu. Quét mọi thư mục con của 00_input/ có
+                           tên chứa "tham khảo"/"baocaocu" hoặc bắt đầu bằng số — KHÔNG cố định
+                           đúng một tên thư mục (sửa 07/09/2026: dự án Kè Nhà Bè thật dùng
+                           "00_input/ThamKhao-ThuThiem/", quy tắc cũ chỉ khớp "DuAn-ThamKhao" nên
+                           bỏ sót đúng thư mục gây ra vụ rò rỉ). Đọc ten_du_an hiện tại từ cả
+                           _info.yaml (khoá HOA TEN_DU_AN) lẫn _facts.yaml (khoá "ten_du_an" hoặc
+                           "ten_du_an_chinh_thuc" — quy ước khoá KHÔNG thống nhất giữa các spec).
+                           Ca thật: tên + 7 căn cứ quy hoạch của dự án Kè Thủ Thiêm lọt vào báo
+                           cáo Kè Nhà Bè, 09/2026 (đọc header/footer từ 07/09/2026, trước đó
+                           qc-check.py chỉ mở word/document.xml nên bỏ sót lỗi tên dự án sai ở
+                           footer).
 """
 
 from __future__ import annotations
@@ -176,6 +193,26 @@ DEFAULT_RULES = {
          "thong_diep": "Số hiệu / ngày tháng để trống bằng dấu lửng — phải dùng {{TODO:...}}"},
         {"regex": r"[.…]{3,}\s*/\s*\S", "ma": "SO_DE_TRONG", "muc": "nghiem_trong",
          "thong_diep": "Số hiệu / ngày tháng để trống bằng dấu lửng — phải dùng {{TODO:...}}"},
+        # --- Bổ sung 07/09/2026, rút từ so sánh output vs bản _DaSua của 3 dự án thật ---
+        {"regex": r"【\s*TODO", "ma": "CON_TODO_RENDER", "muc": "nghiem_trong",
+         "thong_diep": "Còn 【TODO:...】 chưa xử lý (dạng {{TODO}} ĐÃ RENDER ra Word — "
+                        "regex {{TODO không đủ khi kiểm trên file .docx đã render)"},
+        {"regex": r"【\s*THIẾU\s*HÌNH", "ma": "CON_HINH_THIEU", "muc": "nghiem_trong",
+         "thong_diep": "Còn 【THIẾU HÌNH:...】 — xh-trich-hinh chưa chạy xong cho mục này"},
+        {"regex": r"(?i)báo\s+cáo\s+(này|nghiên\s+cứu\s+khả\s+thi\s+giữ\s+nguyên)",
+         "ma": "LECH_VAI", "muc": "canh_bao",
+         "thong_diep": "Câu tự bình luận về chính báo cáo — lỗi \"lệch vai\" "
+                        "(ho-so-van-phong.md Mục L1)"},
+        {"regex": r"(?i)thực\s+hiện\s+yêu\s+cầu\s+nêu\s+trên,?\s*chủ\s+đầu\s+tư",
+         "ma": "LECH_VAI", "muc": "canh_bao",
+         "thong_diep": "Câu kể lại quá trình làm hồ sơ — lỗi \"lệch vai\" (Mục L2)"},
+        {"regex": r"(?i)đơn\s+vị\s+tư\s+vấn\s+lập\s+báo\s+cáo\s+là",
+         "ma": "LECH_VAI", "muc": "canh_bao",
+         "thong_diep": "Tự giới thiệu đơn vị tư vấn trong thân bài — đã có ở bìa/khung tên "
+                        "bản vẽ (Mục L2)"},
+        {"regex": r"(?i)hồ\s+sơ\s+mang\s+mã\s+số",
+         "ma": "LECH_VAI", "muc": "canh_bao",
+         "thong_diep": "Liệt kê mã số/cấu tạo bộ hồ sơ trong thân bài — không cần thiết (Mục L2)"},
     ],
 }
 
@@ -195,6 +232,7 @@ class Khoi:
     stt: int = 0
     de_muc: str = ""                # đề mục gần nhất phía trên
     la_heading: bool = False
+    muc_do: int = 0                 # cấp đề mục (Heading1=1, Heading2=2...); 0 = không phải heading
 
 
 def _text_cua_p(p) -> str:
@@ -217,27 +255,33 @@ def _text_cua_p(p) -> str:
     return "".join(ra)
 
 
-def doc_docx(path: str) -> list[Khoi]:
-    with zipfile.ZipFile(path) as z:
-        xml = z.read("word/document.xml")
-    root = ET.fromstring(xml)
-    body = root.find(W + "body")
-    khoi, stt, de_muc = [], 0, ""
-    if body is None:
-        return khoi
-    for el in body:
+def _khoi_tu_container(container, khoi: list, stt: int, de_muc: str,
+                        nhan_co_dinh: str | None = None) -> tuple[int, str]:
+    """Duyệt các con trực tiếp (w:p / w:tbl) của một container (w:body, w:hdr,
+    w:ftr) và gộp vào khoi. nhan_co_dinh: nếu có, dùng làm de_muc cố định
+    (dùng cho header/footer — không có cây đề mục riêng)."""
+    for el in container:
         if el.tag == W + "p":
             txt = _text_cua_p(el).strip()
+            if not txt:
+                continue
             pstyle = el.find(f"{W}pPr/{W}pStyle")
             style = pstyle.get(W + "val", "") if pstyle is not None else ""
             heading = style.lower().startswith("heading") or bool(
                 re.match(r"^\d+(\.\d+)*\.?\s+\S", txt)) and len(txt) < 120
-            if not txt:
-                continue
-            stt += 1
+            muc_do = 0
             if heading:
+                mh = re.match(r"(?i)heading\s*(\d+)", style)
+                if mh:
+                    muc_do = int(mh.group(1))
+                else:
+                    mso = re.match(r"^(\d+(?:\.\d+)*)\.?\s+\S", txt)
+                    muc_do = mso.group(1).count(".") + 1 if mso else 1
+            stt += 1
+            if nhan_co_dinh is None and heading:
                 de_muc = txt[:70]
-            khoi.append(Khoi("p", txt, stt=stt, de_muc=de_muc, la_heading=heading))
+            khoi.append(Khoi("p", txt, stt=stt, de_muc=nhan_co_dinh or de_muc,
+                              la_heading=heading, muc_do=muc_do))
         elif el.tag == W + "tbl":
             hang = []
             for tr in el.findall(W + "tr"):
@@ -246,7 +290,30 @@ def doc_docx(path: str) -> list[Khoi]:
                     o.append(" ".join(_text_cua_p(p) for p in tc.findall(W + "p")).strip())
                 hang.append(o)
             stt += 1
-            khoi.append(Khoi("tbl", "", hang=hang, stt=stt, de_muc=de_muc))
+            khoi.append(Khoi("tbl", "", hang=hang, stt=stt, de_muc=nhan_co_dinh or de_muc))
+    return stt, de_muc
+
+
+def doc_docx(path: str) -> list[Khoi]:
+    with zipfile.ZipFile(path) as z:
+        xml = z.read("word/document.xml")
+        # 07/09/2026: bổ sung đọc header/footer — lỗi thật đã lọt qua trước đây
+        # (tên dự án sai ở footer, không bị qc-check.py bắt vì trước giờ chỉ mở
+        # word/document.xml). Header/footer không có luật số liệu riêng nhưng
+        # vẫn phải chạy được CHO_TRONG / TEN_DU_AN_LA.
+        phu_kien = sorted(n for n in z.namelist()
+                           if re.match(r"word/(header|footer)\d*\.xml$", n))
+        xml_phu = [(n, z.read(n)) for n in phu_kien]
+    root = ET.fromstring(xml)
+    body = root.find(W + "body")
+    khoi: list[Khoi] = []
+    stt, de_muc = 0, ""
+    if body is not None:
+        stt, de_muc = _khoi_tu_container(body, khoi, stt, de_muc)
+    for ten_phan, xml_p in xml_phu:
+        r2 = ET.fromstring(xml_p)
+        nhan = ("Header" if "header" in ten_phan else "Footer") + f" ({ten_phan})"
+        stt, _ = _khoi_tu_container(r2, khoi, stt, de_muc, nhan_co_dinh=nhan)
     return khoi
 
 
@@ -267,9 +334,11 @@ def doc_markdown(path: str) -> list[Khoi]:
                 khoi.append(Khoi("tbl", hang=hang, stt=stt, de_muc=de_muc))
                 hang, trong_bang = [], False
             if raw.startswith("#"):
+                muc_do = len(raw) - len(raw.lstrip("#"))
                 de_muc = raw.lstrip("# ").strip()[:70]
                 stt += 1
-                khoi.append(Khoi("p", de_muc, stt=stt, de_muc=de_muc, la_heading=True))
+                khoi.append(Khoi("p", de_muc, stt=stt, de_muc=de_muc,
+                                  la_heading=True, muc_do=muc_do))
             elif raw.strip():
                 buf.append(raw)
             elif buf:
@@ -762,6 +831,61 @@ def luat_9_logic_van(khoi: list[Khoi]) -> list[Loi]:
     return loi
 
 
+TU_LAP_RE = re.compile(r"\b([^\W\d_]{2,})\s+\1\b", re.UNICODE | re.IGNORECASE)
+# Lặp CỤM 2 âm tiết liền kề (vd "gói thầu gói thầu") — đây mới là dạng thật
+# gây ra ca thật đã ghi ở docstring; regex 1-âm-tiết ở trên KHÔNG bắt được nó
+# (đối chiếu lại 09/2026: "02-03 gói thầu gói thầu xây dựng" không khớp
+# TU_LAP_RE vì hai token xen kẽ "gói thầu" ≠ liền kề cùng token).
+TU_LAP_2_RE = re.compile(r"\b([^\W\d_]{2,}\s+[^\W\d_]{2,})\s+\1\b", re.UNICODE | re.IGNORECASE)
+
+# Vài cụm láy hợp lệ trong tiếng Việt — không báo, để tránh báo sai.
+TU_LAP_HOP_LE = {"dần dần", "từ từ", "lâu lâu", "thường thường", "vừa vừa", "đều đều", "xa xa",
+                  "song song"}
+
+# Âm tiết hay đứng CUỐI một từ ghép rồi lại đứng ĐẦU từ ghép kế tiếp trong văn
+# phong hành chính/kỹ thuật — không phải lỗi lặp, chỉ là ranh giới hai từ khác
+# nhau trùng âm tiết. Rút từ đối chiếu thật trên BCĐXCTĐT Kè Nhà Bè, 09/2026
+# (chạy qc-check.py trên bản output thật: 11/13 cảnh báo TU_LAP_LIEN_KE đều
+# rơi vào các cặp này — 100% báo sai): "nội địa" + "địa phương" → "địa địa";
+# "xác định" + "định mức/định hướng" → "định định"; "thi công" + "công trình"
+# → "công công". Đây là danh sách hẹp, chỉ thêm âm tiết đã CÓ BẰNG CHỨNG THẬT
+# gây báo sai — không suy đoán loại rộng ra toàn bộ âm tiết đơn.
+TU_LAP_RANH_GIOI_AM_TIET = {"địa", "định", "công", "thi"}
+
+
+def luat_11_tu_lap(khoi: list[Khoi]) -> list[Loi]:
+    """L11 — từ/cụm lặp liền kề, thường do đơn vị của {{fact:}} đã có sẵn chữ mà câu văn
+    viết thêm lần nữa (vd đơn vị "gói thầu" + câu văn cũng viết "gói thầu"). Bắt cả lặp
+    1 âm tiết ("định định") lẫn lặp cụm 2 âm tiết ("gói thầu gói thầu")."""
+    loi = []
+    for k in khoi:
+        noi_dung = k.text if k.loai == "p" else " ".join(" ".join(h) for h in k.hang)
+        da_bao: set[tuple[int, int]] = set()
+        for m in TU_LAP_2_RE.finditer(noi_dung):
+            if m.group(0).lower() in TU_LAP_HOP_LE:
+                continue
+            da_bao.add(m.span())
+            loi.append(Loi(
+                "TU_LAP_LIEN_KE", "canh_bao", k.de_muc, k.stt,
+                f"Cụm '{m.group(1)}' lặp liền kề — kiểm tra xem có phải do đơn vị của "
+                f"{{{{fact:}}}} đã chứa sẵn cụm này rồi câu văn viết thêm lần nữa không",
+                noi_dung[max(0, m.start() - 30): m.end() + 30].strip()))
+        for m in TU_LAP_RE.finditer(noi_dung):
+            if m.group(0).lower() in TU_LAP_HOP_LE:
+                continue
+            if m.group(1).lower() in TU_LAP_RANH_GIOI_AM_TIET:
+                continue
+            if any(a <= m.start() and m.end() <= b for a, b in da_bao):
+                continue  # đã báo ở dạng cụm 2 âm tiết bao trùm, khỏi báo trùng
+            loi.append(Loi(
+                "TU_LAP_LIEN_KE", "canh_bao", k.de_muc, k.stt,
+                f"Từ '{m.group(1)}' lặp liền kề — kiểm tra xem có phải do đơn vị của "
+                f"{{{{fact:}}}} đã chứa sẵn chữ này (khai ở _facts.yaml) rồi câu văn viết "
+                f"thêm lần nữa không",
+                noi_dung[max(0, m.start() - 30): m.end() + 30].strip()))
+    return loi
+
+
 def luat_8_chua_duyet(khoi: list[Khoi], facts: dict) -> list[Loi]:
     """Bản thảo dùng {{fact:x}} mà x đang unverified/conflict trong _facts.yaml."""
     loi = []
@@ -866,6 +990,119 @@ def luat_10_so_muon(khoi: list[Khoi], facts: dict) -> list[Loi]:
                         m.group(0)))
     return loi
 
+
+def luat_12_de_muc_rong(khoi: list[Khoi]) -> list[Loi]:
+    """L12 DE_MUC_RONG — một đề mục không có đoạn văn/bảng nào ngay sau nó
+    trước đề mục kế tiếp CÙNG CẤP HOẶC NÔNG HƠN (hoặc hết văn bản). Ca thật:
+    'Đề mục nháp không có nội dung, tại sao không xóa đi' — comment người
+    dùng trên BCĐXCTĐT Kè Nhà Bè, 09/2026.
+
+    Dùng muc_do (Heading1/2/3... hoặc số #) để loại trừ trường hợp bình
+    thường — đề mục cha có mục con bám sát ngay (vd Heading1 nối liền
+    Heading2) — vì đó KHÔNG phải đề mục trống, chỉ là không có đoạn mở đầu.
+    Không có muc_do (muc_do=0, đọc từ .docx kiểu cũ không nhận ra style) thì
+    coi mọi heading liền kề là khả nghi, như trước."""
+    loi = []
+    for i, k in enumerate(khoi):
+        if not (k.loai == "p" and k.la_heading):
+            continue
+        ke_tiep = khoi[i + 1] if i + 1 < len(khoi) else None
+        trong = ke_tiep is None
+        if not trong and ke_tiep.loai == "p" and ke_tiep.la_heading:
+            if k.muc_do == 0 or ke_tiep.muc_do == 0:
+                trong = True                       # không xác định được cấp — giữ như cũ
+            elif ke_tiep.muc_do <= k.muc_do:
+                trong = True                       # sibling hoặc nông hơn, không phải mục con
+        if trong:
+            loi.append(Loi(
+                "DE_MUC_RONG", "canh_bao", k.de_muc, k.stt,
+                f"Đề mục '{k.text[:60]}' không có đoạn văn/bảng nào ngay sau trước đề mục "
+                f"kế tiếp cùng cấp (hoặc hết văn bản) — kiểm xem có sót đề mục nháp chưa viết",
+                k.text[:80]))
+    return loi
+
+
+TEN_DU_AN_RE = re.compile(r"(?im)^\s*#{0,6}\s*(?:Dự\s*án\s*[:：]\s*)(.{6,160})\s*$")
+# Sửa 09/2026 (đối chiếu với dự án Kè Nhà Bè thật): quy ước tên thư mục tham
+# khảo KHÔNG cố định là "DuAn-ThamKhao" — dự án Kè Nhà Bè thật dùng
+# "00_input/ThamKhao-ThuThiem/" (tên dự án tham khảo chèn thẳng vào tên thư
+# mục). Regex cũ chỉ khớp đúng "DuAn-ThamKhao"/"R5-BaoCaoCu"/số-đứng-đầu nên
+# BỎ SÓT chính thư mục gây ra vụ rò rỉ thật — nới thành bắt bất kỳ tên thư
+# mục nào chứa "tham khảo" (không dấu) hoặc "baocaocu" hoặc bắt đầu bằng số.
+_THU_MUC_THAM_KHAO_RE = re.compile(r"(?i)tham.?khao|baocaocu|^\d")
+
+
+def _doan_thu_muc_du_an(duong_nguon: str) -> str:
+    """Đoán thư mục gốc dự án từ đường dẫn --nguon (best-effort). Quy ước dự
+    án: <goc_du_an>/(00_input|10_content|20_output|30_review|specs)/..."""
+    duong = os.path.abspath(duong_nguon)
+    goc = duong if os.path.isdir(duong) else os.path.dirname(duong)
+    ten_goc = os.path.basename(goc)
+    if re.match(r"^(\d\d_|specs$|10_content$)", ten_goc):
+        return os.path.dirname(goc)
+    return goc
+
+
+def _tim_ten_du_an_tham_khao(thu_muc_du_an: str) -> list[str]:
+    """Quét 00_input/DuAn-ThamKhao, 00_input/R5-BaoCaoCu, 00_input/NN.* (quy
+    ước 90.BanThao-Cu...) tìm tên các dự án THAM KHẢO, để dò xem tên đó có bị
+    lọt nguyên văn vào báo cáo đang kiểm không (ca thật: tên + căn cứ pháp lý
+    của dự án Kè Thủ Thiêm lọt vào báo cáo Kè Nhà Bè, 09/2026)."""
+    ten_la: set[str] = set()
+    goc = os.path.join(thu_muc_du_an or "", "00_input")
+    if not os.path.isdir(goc):
+        return []
+    try:
+        con = os.listdir(goc)
+    except OSError:
+        return []
+    for ten in con:
+        duong = os.path.join(goc, ten)
+        if not (os.path.isdir(duong) and _THU_MUC_THAM_KHAO_RE.match(ten)):
+            continue
+        for thu_muc_goc, _, files in os.walk(duong):
+            for f in files:
+                if not f.lower().endswith(".md"):
+                    continue
+                try:
+                    with open(os.path.join(thu_muc_goc, f), encoding="utf-8", errors="ignore") as fh:
+                        dau = fh.read(4000)
+                except OSError:
+                    continue
+                for m in TEN_DU_AN_RE.finditer(dau):
+                    t = m.group(1).strip().strip("*_ ")
+                    if 8 <= len(t) <= 160:
+                        ten_la.add(t)
+    return sorted(ten_la)
+
+
+def luat_13_ten_du_an_la(khoi: list[Khoi], ten_du_an_hien_tai: str,
+                          thu_muc_du_an: str) -> list[Loi]:
+    """L13 TEN_DU_AN_LA — dò tên dự án của báo cáo THAM KHẢO lọt nguyên văn
+    vào bản thảo dự án hiện tại (rò rỉ khi tái sử dụng báo cáo mẫu — Nguyên
+    tắc 6). Best-effort: chỉ bắt được khi báo cáo tham khảo nằm trong
+    00_input/DuAn-ThamKhao hoặc 00_input/R5-BaoCaoCu và có ghi tên dự án theo
+    mẫu 'Dự án: ...' ở đầu file .md. Không thay được việc đọc kỹ của con
+    người, chỉ là một lưới an toàn thêm."""
+    loi = []
+    ten_hien_tai_chuan = _chuan(ten_du_an_hien_tai) if ten_du_an_hien_tai else ""
+    for ten in _tim_ten_du_an_tham_khao(thu_muc_du_an):
+        if ten_hien_tai_chuan and _chuan(ten) == ten_hien_tai_chuan:
+            continue  # đúng là dự án đang làm, không phải rò rỉ
+        mau = re.escape(ten[:60])
+        for k in khoi:
+            noi_dung = k.text if k.loai == "p" else " ".join(" ".join(h) for h in k.hang)
+            m = re.search(mau, noi_dung, re.IGNORECASE)
+            if m:
+                loi.append(Loi(
+                    "TEN_DU_AN_LA", "nghiem_trong", k.de_muc, k.stt,
+                    f"Thấy tên một dự án THAM KHẢO (không phải dự án đang làm) lọt nguyên "
+                    f"văn vào bản thảo — kiểm lại có phải rò rỉ khi tái sử dụng báo cáo mẫu "
+                    f"không (Nguyên tắc 6): '{ten[:70]}'",
+                    noi_dung[max(0, m.start() - 20): m.end() + 20].strip()))
+    return loi
+
+
 # ════════════════════════════════════════════════════════════════════════════
 # 6. CHẠY
 # ════════════════════════════════════════════════════════════════════════════
@@ -899,12 +1136,26 @@ def main() -> int:
     ap.add_argument("nguon", help="file .docx / .md hoặc thư mục 10_content/")
     ap.add_argument("--rules", help="qc-rules.yaml ghi đè danh mục chỉ tiêu mặc định")
     ap.add_argument("--facts", help="_facts.yaml để kiểm số chưa duyệt")
+    ap.add_argument("--info", help="_info.yaml để đối chiếu tên dự án lạ (mặc định: tự tìm "
+                                    "_info.yaml trong thư mục dự án suy ra từ --nguon)")
     ap.add_argument("--json", dest="ra_json", help="ghi kết quả ra file JSON")
     ap.add_argument("--im", action="store_true", help="chỉ in tổng kết")
     a = ap.parse_args()
 
     rules = gop_rules(nap_yaml(a.rules))
     facts = nap_yaml(a.facts) or {}
+    thu_muc_du_an = _doan_thu_muc_du_an(a.nguon)
+    duong_info = a.info or os.path.join(thu_muc_du_an, "_info.yaml")
+    info = nap_yaml(duong_info) or {}
+    # Sửa 09/2026: _info.yaml dùng khoá viết HOA (TEN_DU_AN, khớp {{KEY}} khuôn),
+    # còn _facts.yaml quy ước dùng "ten_du_an" (khớp {{fact:ten_du_an}}) — nhưng
+    # đặc tả spec thật của dự án Kè Nhà Bè (specs/DXCTDT.yaml) lại khai khoá
+    # "ten_du_an_chinh_thuc". Dò đủ các biến thể để không bỏ sót — nếu không,
+    # ten_du_an_hien_tai rỗng khiến luật L13 không nhận ra tên dự án hiện tại,
+    # dù vẫn còn dò được rò rỉ tên dự án LẠ (chỉ mất khả năng loại trừ tên đúng).
+    ten_du_an_hien_tai = str(
+        info.get("TEN_DU_AN") or info.get("ten_du_an")
+        or facts.get("ten_du_an") or facts.get("ten_du_an_chinh_thuc") or "")
 
     khoi, loai = doc_nguon(a.nguon)
     if not khoi:
@@ -921,6 +1172,9 @@ def main() -> int:
     loi += luat_9_logic_van(khoi)
     loi += luat_8_chua_duyet(khoi, facts)
     loi += luat_10_so_muon(khoi, facts)
+    loi += luat_11_tu_lap(khoi)
+    loi += luat_12_de_muc_rong(khoi)
+    loi += luat_13_ten_du_an_la(khoi, ten_du_an_hien_tai, thu_muc_du_an)
 
     # bỏ trùng, sắp theo mức rồi theo vị trí
     thay, loc = set(), []

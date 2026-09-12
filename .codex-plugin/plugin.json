@@ -1,9 +1,9 @@
 {
   "name": "xh-tuvan",
-  "version": "0.9.0",
-  "description": "Điều phối nghiệp vụ tư vấn xây dựng cho NCKT, ĐXCTĐT và KT-KT với workflow theo revision và học có kiểm soát.",
+  "version": "0.9.2",
+  "description": "\u0110i\u1ec1u ph\u1ed1i nghi\u1ec7p v\u1ee5 t\u01b0 v\u1ea5n x\u00e2y d\u1ef1ng cho NCKT, \u0110XCT\u0110T v\u00e0 KT-KT v\u1edbi workflow theo revision v\u00e0 h\u1ecdc c\u00f3 ki\u1ec3m so\u00e1t.",
   "author": {
-    "name": "Ngô Xuân Hưng"
+    "name": "Ng\u00f4 Xu\u00e2n H\u01b0ng"
   },
   "license": "MIT",
   "keywords": [
@@ -17,19 +17,19 @@
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "XH Tư vấn",
-    "shortDescription": "Điều phối hồ sơ tư vấn xây dựng",
-    "longDescription": "Điều phối trọn quy trình NCKT, ĐXCTĐT và KT-KT; quản lý nội dung theo revision, QA, Word và learning có phê duyệt.",
-    "developerName": "Ngô Xuân Hưng",
+    "displayName": "XH T\u01b0 v\u1ea5n",
+    "shortDescription": "\u0110i\u1ec1u ph\u1ed1i h\u1ed3 s\u01a1 t\u01b0 v\u1ea5n x\u00e2y d\u1ef1ng",
+    "longDescription": "\u0110i\u1ec1u ph\u1ed1i tr\u1ecdn quy tr\u00ecnh NCKT, \u0110XCT\u0110T v\u00e0 KT-KT; qu\u1ea3n l\u00fd n\u1ed9i dung theo revision, QA, Word v\u00e0 learning c\u00f3 ph\u00ea duy\u1ec7t.",
+    "developerName": "Ng\u00f4 Xu\u00e2n H\u01b0ng",
     "category": "Productivity",
     "capabilities": [
       "Read",
       "Write"
     ],
     "defaultPrompt": [
-      "Lập Báo cáo NCKT cho dự án trong thư mục hiện tại.",
-      "Tiếp tục hồ sơ ĐXCTĐT và chỉ cập nhật các phần đã thay đổi.",
-      "Kiểm tra QA hồ sơ KT-KT, nêu nguồn thiếu và mâu thuẫn."
+      "L\u1eadp B\u00e1o c\u00e1o NCKT cho d\u1ef1 \u00e1n trong th\u01b0 m\u1ee5c hi\u1ec7n t\u1ea1i.",
+      "Ti\u1ebfp t\u1ee5c h\u1ed3 s\u01a1 \u0110XCT\u0110T v\u00e0 ch\u1ec9 c\u1eadp nh\u1eadt c\u00e1c ph\u1ea7n \u0111\u00e3 thay \u0111\u1ed5i.",
+      "Ki\u1ec3m tra QA h\u1ed3 s\u01a1 KT-KT, n\u00eau ngu\u1ed3n thi\u1ebfu v\u00e0 m\u00e2u thu\u1eabn."
     ],
     "brandColor": "#245B7A"
   }

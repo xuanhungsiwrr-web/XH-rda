@@ -260,3 +260,38 @@ cho_trong:
     Một câu viện dẫn cả hệ hàng hải lẫn hệ đường thuỷ nội địa cho cùng một vị trí.
     Một vị trí trên sông chỉ thuộc một hệ quản lý luồng - xác định thuộc hệ nào rồi
     chỉ viện dẫn hệ đó
+# --- Bổ sung 07/09/2026, rút từ so sánh output vs bản _DaSua của 3 dự án thật ---
+- regex: 【\s*TODO
+  ma: CON_TODO_RENDER
+  muc: nghiem_trong
+  thong_diep: >-
+    Còn 【TODO:...】 chưa xử lý (đây là dạng {{TODO:...}} ĐÃ RENDER ra Word —
+    render_report.py tô vàng {{TODO}} thành 【TODO】 khi render, nên chỉ regex
+    {{TODO không đủ khi kiểm trên file .docx đã render)
+- regex: 【\s*THIẾU\s*HÌNH
+  ma: CON_HINH_THIEU
+  muc: nghiem_trong
+  thong_diep: Còn 【THIẾU HÌNH:...】 — xh-trich-hinh chưa chạy xong cho mục này
+- regex: (?i)báo\s+cáo\s+(này|nghiên\s+cứu\s+khả\s+thi\s+giữ\s+nguyên)
+  ma: LECH_VAI
+  muc: canh_bao
+  thong_diep: >-
+    Câu tự bình luận về chính báo cáo ("Báo cáo này...") — lỗi "lệch vai" đã ghi
+    ở ho-so-van-phong.md Mục L1. Thuyết minh trình bày công trình, không bình
+    luận về bố cục/phạm vi của chính nó
+- regex: (?i)thực\s+hiện\s+yêu\s+cầu\s+nêu\s+trên,?\s*chủ\s+đầu\s+tư
+  ma: LECH_VAI
+  muc: canh_bao
+  thong_diep: >-
+    Câu kể lại quá trình làm hồ sơ ("Thực hiện yêu cầu nêu trên, Chủ đầu tư đã
+    tổ chức...") — lỗi "lệch vai" đã ghi ở ho-so-van-phong.md Mục L2
+- regex: (?i)đơn\s+vị\s+tư\s+vấn\s+lập\s+báo\s+cáo\s+là
+  ma: LECH_VAI
+  muc: canh_bao
+  thong_diep: >-
+    Tự giới thiệu đơn vị tư vấn trong thân bài — đã có ở bìa và khung tên bản
+    vẽ, không lặp lại trong thuyết minh (ho-so-van-phong.md Mục L2)
+- regex: (?i)hồ\s+sơ\s+mang\s+mã\s+số
+  ma: LECH_VAI
+  muc: canh_bao
+  thong_diep: Liệt kê mã số/cấu tạo bộ hồ sơ trong thân bài — không cần thiết (Mục L2)

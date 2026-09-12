@@ -1,6 +1,6 @@
 # Workspace layout 3
 
-Layout có version riêng với plugin: `layout_version=3`, plugin `0.9.0`. Mọi caller dùng `scripts/xh_layout.py`; không tự ghép chuỗi đường dẫn. Root Google Drive chính được định danh bằng folder ID `1kO9wbjTqSxB-NDLSZqfGuRHwc-Eqkmee`. ID/URL không được suy thành ổ đĩa cục bộ.
+Layout có version riêng với plugin: `layout_version=3`, plugin `0.9.2`. Mọi caller dùng `scripts/xh_layout.py`; không tự ghép chuỗi đường dẫn. Root Google Drive chính được định danh bằng folder ID `1kO9wbjTqSxB-NDLSZqfGuRHwc-Eqkmee`. ID/URL không được suy thành ổ đĩa cục bộ.
 
 ```text
 AI_Space/

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import json
 from pathlib import Path, PurePosixPath
 
-PLUGIN_VERSION = "0.9.0"
+PLUGIN_VERSION = "0.9.2"
 LAYOUT_VERSION = 3
 LEGACY_LAYOUT_VERSION = 2
 

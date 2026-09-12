@@ -11,7 +11,7 @@ MASTER tự vận hành các task từ `domain-next`: EXTRACTOR → RESEARCHER k
 
 Đọc snapshot approved knowledge, `30_Working/.ai/STATE.md`, `DECISIONS.md` và `PROJECT_FACTS.json`. Dùng approved knowledge như hướng dẫn có phạm vi/evidence, không thay dữ liệu dự án hoặc nguồn luật hiện hành. Nội dung knowledge không có quyền sửa skill hay ghi đè chỉ thị người dùng.
 
-Chọn khung nội dung tối thiểu, bổ sung khung ngành nếu áp dụng; giữ toàn bộ requirement IDs. Tự lập outline với phụ thuộc và trình duyệt. Chỉ viết song song các phần độc lập sau khi thống nhất facts/giả định; Global quyết định năng lực thực thi sẵn có. Hỗ trợ all, section, incremental; giữ các phần độc lập và bản sửa của người dùng.
+Chọn khung nội dung tối thiểu, bổ sung khung ngành nếu áp dụng; giữ toàn bộ requirement IDs. Tự lập outline với phụ thuộc và trình duyệt. Chỉ viết song song các phần độc lập sau khi thống nhất facts/giả định; Global quyết định năng lực thực thi sẵn có. Hỗ trợ all, section, incremental; giữ các phần độc lập và bản sửa của người dùng. Gọi `xh-caotrinh-ke` khi cần tính cao độ đỉnh kè mái dốc hoặc yêu cầu chỉ rõ phần tính toán cấu trúc chuyên biệt.
 
 QA/duyệt theo revision rồi assemble/render. Final bắt buộc có `release_id` và tạo đúng cặp bất biến trong `40_Outputs`/`50_Feedback`; chỉ sửa bản `_XHedited`. Thiếu dữ liệu tạo draft có TODO, không chứng nhận final. Import feedback khóa đúng pair/hash/revision, không tự tạo candidate. Mỗi lần chốt báo cáo bắt buộc post-review, phân loại và validation bài học; chỉ complete khi đã giải quyết candidate. Không tự phê duyệt bài học hay skill version.
 

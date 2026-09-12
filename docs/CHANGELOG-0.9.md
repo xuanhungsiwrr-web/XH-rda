@@ -1,4 +1,16 @@
-# Changelog 0.9.0
+# Changelog 0.9.x
+
+## 0.9.2 — tích hợp xh-caotrinh-ke
+
+- Tích hợp skill `xh-caotrinh-ke` và `scripts/caotrinh_ke.py` để tính cao độ đỉnh kè theo đầu vào có nguồn.
+- Sửa routing của `xh-tuvan` thành “đỉnh kè”; kết quả kỹ thuật vẫn phải qua `xh-qc` và không tự chuyển thành dữ kiện đã duyệt.
+
+## 0.9.1 — hồi quy bài học ba dự án và bỏ xh-humanize
+
+- Đưa các luật đã có bằng chứng từ `90_Archive/bai-hoc-3-du-an-tong-hop.md` vào `qc-check.py`/`qc-rules.yaml`: TODO/hình sau render, lệch vai, lặp cụm, đề mục rỗng, rò tên dự án tham khảo, header/footer và biến thể khóa tên dự án.
+- Bổ sung lưới hướng dẫn tương ứng cho `xh-qc` và `xh-viet`.
+- Gỡ skill `xh-humanize` khỏi plugin; văn phong được áp dụng trực tiếp khi viết theo hồ sơ Mục G.
+- Không thay đổi các kết luận chưa kiểm chứng trong phần giới hạn của tài liệu bài học.
 
 ## Workspace và migration
 

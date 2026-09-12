@@ -129,6 +129,7 @@ Dạng đầy đủ của văn bản: **`<Loại> số <số hiệu> ngày <ngà
 | "đây là", "bao gồm:" + bullet | mở bằng chủ thể; liệt kê bằng câu hoặc bảng | thói quen của AI, không có trong kho |
 | dấu `…` hay `.../` cho chỗ trống | `{{TODO: nội dung cần bổ sung}}` | bản đã nộp từng để lọt *"Công văn số …../UBND-NNXD"* |
 | ký tự `÷` font Symbol (U+F0B8) | ký tự Unicode `÷` (U+00F7) hoặc chữ "đến" | mất khi trích PDF, hiện thành số vô nghĩa |
+| hai dấu gạch ngang dài `—…—` chú giải một cụm giữa câu | dấu phẩy, dấu chấm phẩy, mở ngoặc đơn, dấu gạch nối `-`, hoặc tách thành câu riêng | *"Ban Quản lý ... Giao thông — chủ đầu tư dự kiến — là đơn vị..."* → *"Ban Quản lý ... Giao thông (chủ đầu tư dự kiến) là đơn vị..."*; nạp từ đối chiếu C2.md dự án Kè Nhà Bè, 12/09/2026 — bài học L-em-dash-doi |
 
 **Từ ràm rà — dùng có kiểm soát:** `khoảng` (121 lần), `có thể` (51), `tương đối` (24), `dự kiến` (22), `cơ bản` (19). Chúng có trong kho nên không cấm, nhưng mỗi lần dùng phải tự hỏi: *đã có số chưa?* Nếu có số thì bỏ từ ràm rà đi.
 

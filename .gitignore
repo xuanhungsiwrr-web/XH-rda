@@ -1,6 +1,10 @@
 .venv/
+.pytest_cache/
 __pycache__/
 *.pyc
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
 config/providers.local.json
 .env
 build/
