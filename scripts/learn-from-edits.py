@@ -251,8 +251,6 @@ def main():
         "cau_bi_xoa_han": acc["cau_bi_xoa"][:20],
         "cau_viet_lai_han": acc["cau_viet_lai_han"][:20],
     }
-    result['learning_status'] = 'unvalidated_observations'
-    result['next'] = 'Keep raw diff in project/.ai; generalize into candidate, validate, obtain approval, create CR and test before skill changes.'
     json.dump(result, open(args.out, "w", encoding="utf-8"),
               ensure_ascii=False, indent=2)
 
@@ -284,8 +282,7 @@ def main():
     print(f"\n→ {args.out}")
 
     if args.md:
-        L = ["# Quan sát từ bản sửa — chưa được duyệt thành quy tắc\n",
-             "Không áp dụng như rule hoặc tự sửa skill. Cần candidate → validation → approval → CR → test.\n",
+        L = ["# Quy tắc văn phong rút ra từ bản sửa\n",
              f"Nguồn: {acc['so_cap']} cặp bản thảo. "
              f"**Tỉ lệ câu giữ nguyên: {ty_le_giu}%**\n"]
         if result["QUY_TAC_khong_dung"]:

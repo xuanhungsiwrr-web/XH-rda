@@ -1,17 +1,31 @@
 {
   "name": "xh-tuvan",
-  "version": "0.8.0",
+  "version": "0.6.0",
   "license": "MIT",
-  "description": "Construction domain orchestration through capability contracts, revisioned reports and shared approved learning.",
+  "description": "Bộ skill viết hồ sơ tư vấn thiết kế thuỷ lợi, đê điều, kè bờ sông, giao thông, hạ tầng theo kiến trúc ba lớp: dữ liệu (_facts.yaml) → nội dung (Markdown) → trình bày (render vào khuôn Word). Viết từng chương một, mỗi chương phải qua cổng Gemini_QC đạt mới viết chương tiếp theo. Kèm bộ đặc tả đề mục hạt giống cho BCĐXCTĐT, tổ chức thư mục hồ sơ (ổ đĩa, Google Drive), dựng kho số có nguồn, trinh sát tự động bằng Exa, trích hình từ bản vẽ PDF, QC ba tầng, hồ sơ văn phong về vai người viết.",
   "author": {
     "name": "Ngô Xuân Hưng"
   },
   "keywords": [
-    "construction-consulting",
-    "NCKT",
-    "DXCTDT",
-    "KTKT",
-    "domain-orchestrator",
-    "shared-learning"
+    "thuỷ lợi",
+    "đê điều",
+    "kè bờ sông",
+    "cầu",
+    "BCKTKT",
+    "BCNCKT",
+    "BCĐXCTĐT",
+    "TKBVTC",
+    "hồ sơ tư vấn",
+    "tổ chức thư mục",
+    "Google Drive",
+    "_facts.yaml",
+    "NotebookLM",
+    "Exa",
+    "trinh sát",
+    "Gemini_QC",
+    "vai người viết",
+    "viết từng chương",
+    "đặc tả đề mục",
+    "phạm vi đầu tư"
   ]
 }

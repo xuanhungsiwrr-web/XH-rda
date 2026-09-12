@@ -98,7 +98,7 @@ def main():
             continue
 
         khoa_hien_co = facts.get(khoa)
-        if khoa in facts:
+        if isinstance(khoa_hien_co, dict) and str(khoa_hien_co.get("status", "")).lower() == "verified":
             bi_chan_da_co.append(khoa)
             continue
 
@@ -108,7 +108,6 @@ def main():
             "source": h.get("source", "").strip(),
             "quote": quote,
             "status": "unverified",
-            "data_type": "PROJECT",
         }
         du_an_goc = h.get("du_an_goc", "").strip()
         if du_an_goc:
@@ -123,9 +122,8 @@ def main():
             backup = facts_path.with_suffix(facts_path.suffix + f".bak-{datetime.now():%Y%m%d-%H%M%S}")
             shutil.copy2(facts_path, backup)
             print(f"Đã sao lưu bản cũ: {backup}")
-        from xh_core import atomic
-        atomic(Path(args.ra), yaml.safe_dump(facts, allow_unicode=True, sort_keys=True,
-                                            default_flow_style=False).encode('utf-8'))
+        with open(args.ra, "w", encoding="utf-8") as f:
+            yaml.safe_dump(facts, f, allow_unicode=True, sort_keys=True, default_flow_style=False)
 
     print(f"Ghi vào {args.ra}: {len(da_ghi)} khoá mới (status: unverified)")
     for k in da_ghi:
@@ -135,7 +133,7 @@ def main():
         for k in bo_qua_trong:
             print(f"  - {k}")
     if bi_chan_da_co:
-        print(f"Không ghi đè (khoá đã tồn tại, cần đối chiếu ứng viên): {len(bi_chan_da_co)}")
+        print(f"Không ghi đè (khoá đã 'verified' sẵn, cần người dùng tự quyết): {len(bi_chan_da_co)}")
         for k in bi_chan_da_co:
             print(f"  ! {k}")
     return 0

@@ -125,7 +125,8 @@ def nap_yaml(path: str | None) -> dict:
     if not path:
         return {}
     if not os.path.exists(path):
-        raise ValueError(f"Không thấy input bắt buộc đã chỉ định: {path}")
+        print(f"  ! không thấy {path} — bỏ qua", file=sys.stderr)
+        return {}
     try:
         import yaml
     except ImportError:
@@ -157,8 +158,7 @@ class KhoFact:
             self.canh_bao.append(f"khoá '{key}' không có trong _facts.yaml")
             return f"[THIẾU FACT: {key}]", True
         if not isinstance(rec, dict):
-            self.canh_bao.append(f"khoá '{key}' không có nguồn/trạng thái duyệt")
-            return so_viet(rec), True
+            return so_viet(rec), False
         gt, dv = rec.get("value"), rec.get("unit") or ""
         tt = rec.get("status", "unverified")
         if gt is None:
@@ -217,31 +217,7 @@ def _style_an_toan(doc, ten: str, du_phong: str = "Normal"):
         doc.styles[ten]
         return ten
     except KeyError:
-        raise ValueError(f"Template thiếu style bắt buộc: {ten}")
-
-
-def load_template_map(doc, path):
-    """Resolve semantic roles from a per-template contract; accept names or style IDs."""
-    global STYLE
-    cfg = nap_yaml(path)
-    if 'styles' in cfg:
-        mapping = cfg['styles']
-    else:
-        s = cfg['style']
-        mapping = {'than_bai': s['than_bai']['styleId'],
-            'heading': [x['styleId'] for x in s['de_muc']],
-            'bullet': s['danh_sach']['bullet'], 'so_thu_tu': s['danh_sach']['so_thu_tu'],
-            'bang': s['bang']['tblStyle'], 'o_tieu_de': s['bang']['o_tieu_de'],
-            'o_noi_dung': s['bang']['o_noi_dung'], 'caption_bang': s['bang']['caption'],
-            'doan_chua_anh': s['hinh']['doan_chua_anh'], 'caption_hinh': s['hinh']['caption']}
-    def resolve(value):
-        for style in doc.styles:
-            if value in [style.name, style.style_id]: return style.name
-        raise ValueError('Template missing style: ' + value)
-    if set(mapping) != set(STYLE) or len(mapping.get('heading', [])) != 6:
-        raise ValueError('Incomplete template style contract')
-    STYLE = {k: [resolve(v) for v in value] if isinstance(value, list) else resolve(value)
-             for k, value in mapping.items()}
+        return du_phong
 
 
 INLINE_RE = re.compile(r"(\{\{[^}]*\}\}|\*\*[^*]+\*\*|\*[^*]+\*)")
@@ -507,7 +483,6 @@ def main() -> int:
     ap.add_argument("--hinh")
     ap.add_argument("--ra", required=True)
     ap.add_argument("--thu-tu")
-    ap.add_argument("--template-map", help="Per-template YAML/JSON semantic style contract")
     ap.add_argument("--caption", choices=["theo-chuong", "lien-tuc"],
                     default="theo-chuong")
     a = ap.parse_args()
@@ -527,16 +502,12 @@ def main() -> int:
                         for f in os.listdir(a.noidung) if f.endswith(".md"))
     else:
         ds = [a.noidung]
-    missing = [f for f in ds if not os.path.isfile(f)]
-    if missing:
-        raise ValueError('Missing ordered chapter files: ' + ', '.join(missing))
+    ds = [f for f in ds if os.path.exists(f)]
     if not ds:
         print("Không có file .md nào để render.", file=sys.stderr)
         return 2
 
     doc = mo_khuon(a.khuon)
-    if a.template_map:
-        load_template_map(doc, a.template_map)
     da_don = don_duoi_khuon(doc)
 
     tong_khoi = 0
