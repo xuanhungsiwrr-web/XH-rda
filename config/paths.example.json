@@ -1,0 +1,5 @@
+{
+  "projects_root": "<choose project parent>",
+  "report_library": "packs/report-library",
+  "template_roots": []
+}

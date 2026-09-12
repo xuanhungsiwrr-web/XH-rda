@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "note": "Copy to providers.local.json to enable verified endpoints/models. No keys in JSON. Host selection does not change the app model.",
+  "models": [
+    {"id":"host-session","adapter":"host","enabled":true,"capabilities":["writing","reasoning","editing","review","text-extraction"],"modalities":["text"],"quality":0.7,"reliability":0.7,"max_input_bytes":64000,"estimated_cost_usd":null},
+    {"id":"gemini-mcp","adapter":"mcp","tool":"gemini_extract","enabled":true,"capabilities":["text-extraction","document-extraction"],"modalities":["text","pdf","image"],"quality":0.7,"reliability":0.7,"max_input_bytes":64000,"estimated_cost_usd":null},
+    {"id":"notebooklm-manual","adapter":"manual","enabled":false,"capabilities":["document-extraction"],"modalities":["pdf"],"quality":0.7,"reliability":0.7,"max_input_bytes":64000,"estimated_cost_usd":null},
+    {"id":"deepseek-text","adapter":"openai-chat","enabled":false,"base_url":"https://api.deepseek.com","key_env":"DEEPSEEK_API_KEY","model":"","capabilities":["writing","reasoning","review","text-extraction"],"modalities":["text"],"quality":0.7,"reliability":0.7,"max_input_bytes":64000,"estimated_cost_usd":null,"call_ceiling_usd":null},
+    {"id":"mintrouter-text","adapter":"openai-chat","enabled":false,"base_url":"https://api.mintrouter.ai/v1","key_env":"MINTROUTER_API_KEY","model":"","capabilities":["writing","reasoning","review","editing","text-extraction"],"modalities":["text"],"quality":0.7,"reliability":0.7,"max_input_bytes":64000,"estimated_cost_usd":null,"call_ceiling_usd":null}
+  ]
+}

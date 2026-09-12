@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "xh-tuvan": {
+      "command": "D:\\AI_Space\\AI_Config\\PLUGINS\\xh-tuvan-0.6.0\\.venv\\Scripts\\python.exe",
+      "args": [
+        "D:\\AI_Space\\AI_Config\\PLUGINS\\xh-tuvan-0.6.0\\scripts\\xh_mcp_server.py"
+      ],
+      "env": {
+        "XH_PROJECTS_ROOT": "D:\\AI_Space\\AI_Workspace\\Projects",
+        "XH_REPORT_LIBRARY": "D:\\AI_Space\\AI_Workspace\\NoiDung_CacBaoCao",
+        "PYTHONUTF8": "1"
+      }
+    }
+  }
+}
