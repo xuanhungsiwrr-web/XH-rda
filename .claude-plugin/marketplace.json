@@ -6,7 +6,10 @@
   "plugins": [
     {
       "name": "xh-tuvan",
-      "source": "./",
+      "source": {
+        "source": "github",
+        "repo": "xuanhungsiwrr-web/xh-tuvan"
+      },
       "description": "Bo cong cu viet cac loai bao cao"
     },
     {
