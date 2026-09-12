@@ -13,11 +13,6 @@
       "name": "ai-governance",
       "source": "github:xuanhungsiwrr-web/ai-space-governance",
       "description": "Bo cong cu quan tri thu muc AI Space"
-    },
-    {
-      "name": "global-control",
-      "source": "github:xuanhungsiwrr-web/global-control",
-      "description": "Cong cu quan ly va kiem soat toan he thong"
     }
   ]
 }
