@@ -1,0 +1,36 @@
+{
+  "name": "xh-tuvan",
+  "version": "0.8.0",
+  "description": "Điều phối nghiệp vụ tư vấn xây dựng cho NCKT, ĐXCTĐT và KT-KT với workflow theo revision và học có kiểm soát.",
+  "author": {
+    "name": "Ngô Xuân Hưng"
+  },
+  "license": "MIT",
+  "keywords": [
+    "construction-consulting",
+    "NCKT",
+    "DXCTDT",
+    "KTKT",
+    "domain-orchestrator",
+    "shared-learning"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "XH Tư vấn",
+    "shortDescription": "Điều phối hồ sơ tư vấn xây dựng",
+    "longDescription": "Điều phối trọn quy trình NCKT, ĐXCTĐT và KT-KT; quản lý nội dung theo revision, QA, Word và learning có phê duyệt.",
+    "developerName": "Ngô Xuân Hưng",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Lập Báo cáo NCKT cho dự án trong thư mục hiện tại.",
+      "Tiếp tục hồ sơ ĐXCTĐT và chỉ cập nhật các phần đã thay đổi.",
+      "Kiểm tra QA hồ sơ KT-KT, nêu nguồn thiếu và mâu thuẫn."
+    ],
+    "brandColor": "#245B7A"
+  }
+}

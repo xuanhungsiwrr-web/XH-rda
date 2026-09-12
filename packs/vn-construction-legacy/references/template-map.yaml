@@ -1,0 +1,58 @@
+# Bản đồ khuôn Word — hợp đồng giữa KhuonMau_NamQuoc.dotx và render_report.py
+# render_report.py CHỈ được gọi những styleId liệt kê ở đây, không tự đặt định dạng.
+# Đo trực tiếp từ khuôn v9 ngày 21/08/2026: 14/14 style đều có mặt.
+
+khuon:
+  ban_chinh_thuc: "KhuonMau_NamQuoc.dotx"    # v9, chốt 20/08/2026
+  bia: "làm file riêng — KHÔNG ghép trong quy trình này"
+  don_vi: "CÔNG TY CỔ PHẦN TƯ VẤN VÀ ĐẦU TƯ NAM QUỐC"
+
+trang:
+  kho_giay: "A4 21,0 × 29,7 cm"
+  le_trai_cm: 3.00
+  le_phai_cm: 2.00
+  be_rong_vung_chu_cm: 16.0
+
+style:
+  than_bai:
+    styleId: "Normal"
+    font: "Times New Roman"
+    co: 14pt
+    canh: "đều hai bên"
+    thut_dong_dau: 1.50cm
+    gian_dong: 1.20
+  de_muc:
+    - {styleId: "Heading1", hien_thi: "CHƯƠNG I:  <TÊN>", mau: "#002060"}
+    - {styleId: "Heading2", hien_thi: "1.1  <TÊN>",       mau: "#C00000"}
+    - {styleId: "Heading3", hien_thi: "1.1.1  <TÊN>",     mau: "#1F4E79"}
+    - {styleId: "Heading4", hien_thi: "1.1.1.1  <TÊN>",   mau: "#375623"}
+    - {styleId: "Heading5", hien_thi: "a)  <TÊN>",        mau: "#002060", dinh_dang: "gạch dưới"}
+    - {styleId: "Heading6", hien_thi: "i)  <TÊN>",        mau: "#404040"}
+  danh_sach:
+    bullet: "ListBullet"
+    so_thu_tu: "ListNumber"
+  bang:
+    tblStyle: "TableGrid"
+    o_tieu_de: "TableHead"
+    o_noi_dung: "TableContent"
+    caption: "Caption"           # ĐẶT TRÊN bảng
+  hinh:
+    doan_chua_anh: "Picture"     # keepNext + keepLines
+    caption: "PicsCaption"       # ĐẶT DƯỚI hình
+
+truong_word:
+  muc_luc: 'TOC \o "1-3" \h \z \u'
+  danh_muc_bang: 'TOC \h \z \c "Bảng"'
+  danh_muc_hinh: 'TOC \h \z \c "Hình"'
+  caption: 'STYLEREF 1 \s  +  SEQ <Bảng|Hình> \* ARABIC \s 1'
+  ghi_chu: >
+    LibreOffice render STYLEREF 1 \s ra TÊN chương thay vì SỐ chương — Word mới
+    đúng. Luôn kiểm bản cuối bằng Word. Nếu Word cũng sai thì chạy
+    render_report.py với --caption lien-tuc.
+
+cam_ky:
+  - "Không ghép file .docx — render một lần từ nhiều file .md"
+  - "Mọi run phải gán rStyle='DefaultParagraphFont', nếu không LibreOffice bọc vào 'Subtle Reference' (cam, gạch chân)"
+  - "Tạo .rels bằng lxml phải ép nsmap={None: PKG}, nếu để sinh tiền tố ns0: thì LibreOffice từ chối mở file"
+  - "Chặn ký tự vùng dùng riêng U+E000–U+F8FF trước khi xuất"
+  - "Không dùng docx-js để tạo mới — không mở được file sẵn có"

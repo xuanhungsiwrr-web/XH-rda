@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "xh-tuvan": {
+      "command": "python",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/launch_mcp.py"
+      ],
+      "env": {
+        "XH_PROJECTS_ROOT": "${XH_PROJECTS_ROOT}",
+        "XH_REPORT_LIBRARY": "${XH_REPORT_LIBRARY}",
+        "PYTHONUTF8": "1",
+        "XH_TUVAN_KNOWLEDGE_ROOT": "${XH_TUVAN_KNOWLEDGE_ROOT}"
+      }
+    }
+  }
+}

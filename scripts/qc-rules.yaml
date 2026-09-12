@@ -1,0 +1,262 @@
+# ============================================================================
+# qc-rules.yaml — danh mục chỉ tiêu và luật kiểm cho qc-check.py
+# ============================================================================
+# Đây là bản sinh ra từ cấu hình mặc định trong qc-check.py (công trình kè/đê
+# + lộ GTNT). Sửa file này rồi chạy:
+#     python qc-check.py BaoCao.docx --rules qc-rules.yaml
+#
+# CÁCH THÊM MỘT CHỈ TIÊU
+#   ten     : tên hiển thị trong thông báo lỗi
+#   nhan    : các cách viết mà báo cáo dùng để gọi chỉ tiêu này (không dấu hoa
+#             thường đều được). Càng nhiều cách viết, càng ít bỏ sót.
+#   don_vi  : m · mm · % · m/s · °C · M (mác bê tông, tiền tố M trước số)
+#             dùng để chọn ĐÚNG con số trong câu, tránh nhặt phải số thứ tự
+#   hop_ly  : [min, max] — số ngoài khoảng này bị bỏ qua, chống nhặt nhầm
+#   dung_sai: sai khác tương đối được coi là bằng nhau (0.005 = 0,5%)
+#
+# RÀNG BUỘC VẬT LÝ
+#   bieu_thuc chỉ được dùng tên chỉ tiêu đã khai ở trên và toán tử số học.
+#   Chỉ chạy khi mọi chỉ tiêu trong biểu thức đều đọc được từ báo cáo.
+# ============================================================================
+
+chi_tieu:
+  chieu_dai_ke:
+    ten: Chiều dài kè
+    nhan:
+    - chiều dài kè
+    - tổng chiều dài kè
+    - chiều dài tuyến kè
+    - chiều dài toàn tuyến kè
+    - kè có chiều dài
+    - kè dài
+    don_vi: m
+    hop_ly:
+    - 5
+    - 20000
+    dung_sai: 0.005
+  chieu_dai_lo:
+    ten: Chiều dài lộ giao thông nông thôn
+    nhan:
+    - chiều dài lộ
+    - chiều dài tuyến lộ
+    - chiều dài đường
+    - lộ giao thông nông thôn dài
+    - tổng chiều dài lộ
+    don_vi: m
+    hop_ly:
+    - 5
+    - 20000
+    dung_sai: 0.005
+  muc_nuoc_thiet_ke:
+    ten: Mực nước thiết kế P=2%
+    nhan:
+    - mực nước thiết kế
+    - mntk
+    - mực nước p=2%
+    - mực nước ứng với p=2%
+    don_vi: m
+    hop_ly:
+    - -5
+    - 20
+    dung_sai: 0.005
+  cao_trinh_dinh_ke:
+    ten: Cao trình đỉnh kè
+    nhan:
+    - cao trình đỉnh kè
+    - đỉnh kè ở cao trình
+    - cao độ đỉnh kè
+    don_vi: m
+    hop_ly:
+    - -5
+    - 20
+    dung_sai: 0.005
+  cao_trinh_via_he:
+    ten: Cao trình vỉa hè
+    nhan:
+    - cao trình vỉa hè
+    - vỉa hè cao trình
+    - cao độ vỉa hè
+    - vỉa hè ở cao trình
+    don_vi: m
+    hop_ly:
+    - -5
+    - 20
+    dung_sai: 0.005
+  cao_trinh_lan_can:
+    ten: Cao trình đỉnh lan can
+    nhan:
+    - cao trình đỉnh lan can
+    - lan can cao trình
+    - đỉnh lan can
+    - cao trình lan can
+    don_vi: m
+    hop_ly:
+    - -5
+    - 20
+    dung_sai: 0.005
+  van_toc_gio_max:
+    ten: Vận tốc gió cực đại
+    nhan:
+    - vận tốc gió cực đại
+    - vận tốc gió lớn nhất
+    - gió cực đại
+    - vmax
+    - tốc độ gió lớn nhất
+    don_vi: m/s
+    hop_ly:
+    - 0.5
+    - 80
+    dung_sai: 0.01
+  boc_hoi_nam:
+    ten: Lượng bốc hơi năm
+    nhan:
+    - bốc hơi năm
+    - lượng bốc hơi
+    - bốc hơi trung bình năm
+    - tổng lượng bốc hơi
+    don_vi: mm
+    hop_ly:
+    - 100
+    - 4000
+    dung_sai: 0.01
+  luong_mua_nam:
+    ten: Lượng mưa năm
+    nhan:
+    - lượng mưa năm
+    - lượng mưa trung bình năm
+    - mưa bình quân năm
+    - tổng lượng mưa năm
+    don_vi: mm
+    hop_ly:
+    - 100
+    - 6000
+    dung_sai: 0.01
+  nhiet_do_tb_nam:
+    ten: Nhiệt độ trung bình năm
+    nhan:
+    - nhiệt độ trung bình năm
+    - nhiệt độ bình quân năm
+    - nhiệt độ trung bình hàng năm
+    don_vi: °C
+    hop_ly:
+    - 10
+    - 40
+    dung_sai: 0.01
+  do_am_max:
+    ten: Độ ẩm lớn nhất
+    nhan:
+    - độ ẩm lớn nhất
+    - độ ẩm cao nhất
+    - độ ẩm max
+    don_vi: '%'
+    hop_ly:
+    - 30
+    - 100
+    dung_sai: 0.01
+  do_am_min:
+    ten: Độ ẩm nhỏ nhất
+    nhan:
+    - độ ẩm nhỏ nhất
+    - độ ẩm thấp nhất
+    - độ ẩm min
+    don_vi: '%'
+    hop_ly:
+    - 10
+    - 100
+    dung_sai: 0.01
+  mac_bt_ban_chan:
+    ten: Mác bê tông bản chắn đất
+    nhan:
+    - bản chắn đất
+    - bản chắn bê tông
+    - mác bê tông bản chắn
+    don_vi: M
+    hop_ly:
+    - 100
+    - 600
+    dung_sai: 0.0
+  be_rong_via_he:
+    ten: Bề rộng vỉa hè
+    nhan:
+    - bề rộng vỉa hè
+    - vỉa hè rộng
+    - chiều rộng vỉa hè
+    don_vi: m
+    hop_ly:
+    - 0.5
+    - 20
+    dung_sai: 0.005
+rang_buoc:
+- bieu_thuc: cao_trinh_lan_can - cao_trinh_via_he >= 1.10
+  thong_diep: Lan can phải cao ≥ 1,10m so với mặt vỉa hè (an toàn người đi bộ)
+  muc: nghiem_trong
+- bieu_thuc: cao_trinh_dinh_ke > muc_nuoc_thiet_ke
+  thong_diep: Cao trình đỉnh kè phải cao hơn mực nước thiết kế
+  muc: nghiem_trong
+- bieu_thuc: do_am_max > do_am_min
+  thong_diep: Độ ẩm lớn nhất phải lớn hơn độ ẩm nhỏ nhất
+  muc: canh_bao
+bang_dai_luong:
+  độ ẩm:
+    phai_co:
+    - '%'
+    khong_duoc_chi_co:
+    - oc
+    - °c
+    - toc
+    - tbq
+  nhiệt độ:
+    phai_co:
+    - oc
+    - °c
+    - t
+    khong_duoc_chi_co: []
+  lượng mưa:
+    phai_co:
+    - mm
+    - x
+    khong_duoc_chi_co: []
+  bốc hơi:
+    phai_co:
+    - mm
+    - z
+    khong_duoc_chi_co: []
+  gió:
+    phai_co:
+    - m/s
+    - v
+    khong_duoc_chi_co: []
+cho_trong:
+- regex: \{\{\s*TODO
+  ma: CON_TODO
+  muc: nghiem_trong
+  thong_diep: Còn placeholder {{TODO:...}} chưa xử lý
+- regex: '\{\{\s*fact\s*:'
+  ma: CON_FACT
+  muc: nghiem_trong
+  thong_diep: Còn {{fact:...}} chưa được render thay số
+- regex: \{\{[A-Z_]+\}\}
+  ma: CON_PLACEHOLDER
+  muc: nghiem_trong
+  thong_diep: Còn placeholder bìa/header chưa thay
+- regex: (số|Số|ngày|Ngày)\s*:?\s*[.…]{2,}
+  ma: SO_DE_TRONG
+  muc: nghiem_trong
+  thong_diep: Số hiệu / ngày tháng để trống bằng dấu lửng — phải dùng {{TODO:...}}
+- regex: '[.…]{3,}\s*/\s*\S'
+  ma: SO_DE_TRONG
+  muc: nghiem_trong
+  thong_diep: Số hiệu / ngày tháng để trống bằng dấu lửng — phải dùng {{TODO:...}}
+- regex: bước\s+lập\s+dự\s+án\s+đầu\s+tư
+  ma: SAI_TEN_BUOC
+  muc: nghiem_trong
+  thong_diep: >-
+    Sau chủ trương đầu tư, bước kế tiếp gọi đúng tên là "lập Báo cáo nghiên cứu khả thi"
+    (hoặc "lập Báo cáo kinh tế - kỹ thuật"), không gọi là "bước lập dự án đầu tư"
+- regex: (hàng\s*hải[^.]{0,200}?(luồng|hành\s*lang)[^.]{0,80}?đường\s*th(ủy|uỷ)\s*nội\s*địa|đường\s*th(ủy|uỷ)\s*nội\s*địa[^.]{0,200}?(vùng\s*nước\s*cảng\s*biển|Cảng\s*vụ\s*Hàng\s*hải))
+  ma: TRUNG_HE_LUONG
+  muc: canh_bao
+  thong_diep: >-
+    Một câu viện dẫn cả hệ hàng hải lẫn hệ đường thuỷ nội địa cho cùng một vị trí.
+    Một vị trí trên sông chỉ thuộc một hệ quản lý luồng - xác định thuộc hệ nào rồi
+    chỉ viện dẫn hệ đó

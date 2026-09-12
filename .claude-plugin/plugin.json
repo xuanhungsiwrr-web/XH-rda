@@ -1,0 +1,17 @@
+{
+  "name": "xh-tuvan",
+  "version": "0.8.0",
+  "license": "MIT",
+  "description": "Construction domain orchestration through capability contracts, revisioned reports and shared approved learning.",
+  "author": {
+    "name": "Ngô Xuân Hưng"
+  },
+  "keywords": [
+    "construction-consulting",
+    "NCKT",
+    "DXCTDT",
+    "KTKT",
+    "domain-orchestrator",
+    "shared-learning"
+  ]
+}

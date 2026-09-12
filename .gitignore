@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+config/providers.local.json
+.env
+build/

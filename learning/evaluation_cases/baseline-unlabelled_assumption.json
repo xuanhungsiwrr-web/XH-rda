@@ -1,0 +1,15 @@
+{
+  "input": {
+    "facts": [
+      {
+        "source": "fixture",
+        "quote": "assumed",
+        "assumption": true
+      }
+    ]
+  },
+  "expected_findings": [
+    "unlabelled_assumption"
+  ],
+  "explanation": "Synthetic regression for unlabelled_assumption; fixture only, not project facts or approved knowledge."
+}
